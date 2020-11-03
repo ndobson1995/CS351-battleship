@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class Captain {
 
+    private static final int bgLength = 7;
 
     /**
      * run the game
@@ -12,14 +13,20 @@ public class Captain {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Player One, enter your name: ");
         String playerOneName = scanner.nextLine();
+
+
         System.out.print("Player Two, enter your name: ");
         String playerTwoName = scanner.nextLine();
+
+
         boolean playerOneWin = false;
         boolean playerTwoWin = false;
 
+        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+        BattleshipBoard playerTwo = new BattleshipBoard(bgLength);
 
-        BattleshipBoard playerOne = new BattleshipBoard();
-        BattleshipBoard playerTwo = new BattleshipBoard();
+        Board playerOneGUI = new Board(playerOne, playerTwo, bgLength);
+        Board playerTwoGUI = new Board(playerTwo, playerOne, bgLength);
 
         while(true){
             playerOne.printBoard();
@@ -44,6 +51,16 @@ public class Captain {
             }
         }
 
-        
+        if(playerOneWin){
+            updatePlayer(playerOneName);
+        }
+        else{
+            updatePlayer(playerTwoName);
+        }
+    }
+
+
+    public static void updatePlayer(String player){
+
     }
 }

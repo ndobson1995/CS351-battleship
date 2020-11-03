@@ -1,23 +1,23 @@
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Main board building logic
+ * Main board building and interaction logic
  */
 public class BattleshipBoard {
 
-
     private final String[][] player;            // int array for player board
     private final String[][] opponent;          // int array for opponent board
-    private final int bgLength = 5;             // length and depth of board
+    private final int bgLength;             // length and depth of board
     private int ships = 5;                      // number of ships to play with
+
 
     /**
      * Board constructor, create a board for the player and fill it, and build a "blank" board to fire on.
      */
-    public BattleshipBoard(){
+    public BattleshipBoard(int bgLength){
+        this.bgLength = bgLength;
         player = new String[bgLength][bgLength];
         opponent = new String[bgLength][bgLength];
 
@@ -35,6 +35,14 @@ public class BattleshipBoard {
         for(int i = 0; i < ships; i++) {
             addShip();
         }
+    }
+
+
+    /**
+     * @return player string array, used with GUI
+     */
+    public String[][] getPlayer() {
+        return player;
     }
 
 
@@ -127,7 +135,7 @@ public class BattleshipBoard {
             try{
                 // must confirm they're entering a number and not a letter
                 String str = scanner.nextLine();
-                if(str.matches("[1-9][0-9]*")){
+                if(str.matches("[0-9][0-9]*")){
                     X = Integer.parseInt(str);
                 }
             } catch(Exception e){
@@ -140,7 +148,7 @@ public class BattleshipBoard {
             System.out.print("Enter Y coordinate: ");
             try {
                 String str = scanner.nextLine();
-                if(str.matches("[1-9][0-9]*")){
+                if(str.matches("[0-9][0-9]*")){
                     Y = Integer.parseInt(str);
                 }
             } catch(Exception e){
@@ -166,7 +174,6 @@ public class BattleshipBoard {
     }
 
 
-
     /**
      * YOU SUNK MY BATTLESHIP - decrement the number of ships the player has
      */
@@ -183,4 +190,11 @@ public class BattleshipBoard {
         return ships;
     }
 
+
+    /**
+     * @return length of the board
+     */
+    public int getBoardLength(){
+        return bgLength;
+    }
 }
