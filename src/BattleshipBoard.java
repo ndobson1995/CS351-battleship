@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
@@ -181,6 +182,5 @@ public class BattleshipBoard {
     public int getShipsRemaining(){
         return ships;
     }
-
 
 }
