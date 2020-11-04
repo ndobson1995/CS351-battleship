@@ -27,6 +27,7 @@ public class Board extends JFrame implements Runnable {
         main.setVisible(true);
     }
 
+
     public void mainGUI(){
         main = new JFrame("BATTLESHIP");
         main.setSize(1000,500);
@@ -64,6 +65,7 @@ public class Board extends JFrame implements Runnable {
         main.setUndecorated(true);
     }
 
+
     public JPanel initPlayerBoard(JPanel board) {
         for (String[] strings : playerBattleshipBoard.getPlayer()) {
             for (String string : strings) {
@@ -80,6 +82,7 @@ public class Board extends JFrame implements Runnable {
 
         return board;
     }
+
 
     public JPanel initOpponentBoard(JPanel board) {
         for (String[] strings : opponentBattleshipBoard.getPlayer()) {
@@ -110,7 +113,6 @@ public class Board extends JFrame implements Runnable {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return board;
     }
-
 
 
     @Override

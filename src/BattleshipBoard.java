@@ -9,7 +9,7 @@ public class BattleshipBoard {
 
     private final String[][] player;            // int array for player board
     private final String[][] opponent;          // int array for opponent board
-    private final int bgLength;             // length and depth of board
+    private final int bgLength;                 // length and depth of board
     private int ships = 5;                      // number of ships to play with
 
 
@@ -87,6 +87,7 @@ public class BattleshipBoard {
             }
             System.out.println();
         }
+        System.out.println("--------------------------");
     }
 
 
@@ -125,50 +126,94 @@ public class BattleshipBoard {
      * @param opponentBoard opponents board passed in to confirm hit
      * @return boolean to say if you hit or not
      */
-    public boolean fire(String[][] opponentBoard){
+    public boolean playerFire(String[][] opponentBoard){
+
+        while(true) {
+            int X = -1, Y = -1;
+
+            // have the user enter coordinates for X (left-right)
+            while (X < 0 || X >= bgLength) {
+                System.out.print("Enter X coordinate: ");
+                X = getCoord(X);
+            }
+
+            // have the user enter coordinates for Y (up-down)
+            while (Y < 0 || Y >= bgLength) {
+                System.out.print("Enter Y coordinate: ");
+                Y = getCoord(Y);
+            }
+
+            if (opponentBoard[Y][X].equals("*") ||
+                    opponentBoard[Y][X].equals("X")) {
+                System.out.println("Already fired here, try again.");
+            } else {
+                return hitOrMiss(opponentBoard, X, Y);
+            }
+        }
+    }
+
+
+    /**
+     * Method to validate number was entered for coordinate
+     * @param coordinate number to be checked if it's a number and not a letter
+     * @return the number
+     */
+    private int getCoord(int coordinate) {
         Scanner scanner = new Scanner(System.in);
-        int X = -1, Y = -1;
+        try {
+            // must confirm they're entering a number and not a letter
+            String str = scanner.nextLine();
+            if (str.matches("[0-9][0-9]*")) {
+                coordinate = Integer.parseInt(str);
+            }
+        } catch (Exception e) {
+            System.out.println("You must enter a valid number.");
+        }
+        return coordinate;
+    }
 
-        // have the user enter coordinates for X (left-right)
-        while(X < 0 || X >= bgLength) {
-            System.out.print("Enter X coordinate: ");
-            try{
-                // must confirm they're entering a number and not a letter
-                String str = scanner.nextLine();
-                if(str.matches("[0-9][0-9]*")){
-                    X = Integer.parseInt(str);
-                }
-            } catch(Exception e){
-                System.out.println("You must enter a valid number.");
+
+    /**
+     * Method to control the "AI" firing mechanism.
+     * @param opponentBoard the board of the person the AI is playing against
+     * @return boolean signifying hit (true) or miss (false)
+     */
+    public boolean aiFire(String[][] opponentBoard){
+        Random rand = new Random();
+        while(true) {
+            int xCoordinate = rand.nextInt(bgLength);
+            int yCoordinate = rand.nextInt(bgLength);
+            // after coordinates retrieved, fire at the board.
+            // first, does it hit?
+            if (opponentBoard[yCoordinate][xCoordinate].equals("*") ||
+                    opponentBoard[yCoordinate][xCoordinate].equals("X")) {
+
+            } else {
+                return hitOrMiss(opponentBoard, xCoordinate, yCoordinate);
             }
         }
+    }
 
-        // have the user enter coordinates for Y (up-down)
-        while(Y < 0 || Y >= bgLength) {
-            System.out.print("Enter Y coordinate: ");
-            try {
-                String str = scanner.nextLine();
-                if(str.matches("[0-9][0-9]*")){
-                    Y = Integer.parseInt(str);
-                }
-            } catch(Exception e){
-                System.out.println("You must enter a valid number.");
-            }
-        }
 
-        // after coordinates retrieved, fire at the board.
-        // first, does it hit?
-        if(opponentBoard[Y][X].equals("o")){
+    /**
+     * method that determines if you/the AI hit or miss.
+     * @param opponentBoard board of the opponent of whoever is firing
+     * @param xCoordinate X coordinate passed in by player/AI
+     * @param yCoordinate Y coordinate passed in by player/AI
+     * @return true if hit, false if fail.
+     */
+    private boolean hitOrMiss(String[][] opponentBoard, int xCoordinate, int yCoordinate) {
+        if (opponentBoard[yCoordinate][xCoordinate].equals("o")) {
             System.out.println("SHIP SUNK");
-            opponentBoard[Y][X] = "X";
-            opponent[Y][X] = "X";
+            opponentBoard[yCoordinate][xCoordinate] = "X";
+            opponent[yCoordinate][xCoordinate] = "X";
             return true;    // return confirmation
         }
         // or miss?
-        else{
+        else {
             System.out.println("MISS");
-            opponentBoard[Y][X] = "*";
-            opponent[Y][X] = "*";
+            opponentBoard[yCoordinate][xCoordinate] = "*";
+            opponent[yCoordinate][xCoordinate] = "*";
             return false;   // return failure
         }
     }
@@ -188,13 +233,5 @@ public class BattleshipBoard {
      */
     public int getShipsRemaining(){
         return ships;
-    }
-
-
-    /**
-     * @return length of the board
-     */
-    public int getBoardLength(){
-        return bgLength;
     }
 }
