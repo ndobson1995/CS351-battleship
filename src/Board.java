@@ -89,13 +89,11 @@ public class Board extends JFrame implements Runnable {
                 button.setBackground(Color.WHITE);
                 button.setForeground(Color.WHITE);
                 button.addActionListener(actionEvent -> {
-                    if(button.getText().equals("o")) {
+                    if (button.getText().equals("o")) {
                         button.setBackground(Color.RED);
                         JOptionPane.showMessageDialog(main, "Hit!");
                         button.setBackground(Color.RED);
-                        System.out.println(button.getX() + " " + button.getY());
-                    }
-                    else if(button.getText().equals("~")){
+                    } else if (button.getText().equals("~")) {
                         button.setBackground(Color.GREEN);
                         System.out.println(button.getX() + " " + button.getY());
                     }
@@ -106,7 +104,7 @@ public class Board extends JFrame implements Runnable {
             }
         }
         board.setBorder(BorderFactory.createTitledBorder("Firing Range"));
-        setSize(400,400);
+        setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return board;
     }
