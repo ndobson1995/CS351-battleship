@@ -5,30 +5,40 @@ import java.awt.event.WindowEvent;
 
 public class BoardGUI extends JFrame {
 
-    private JPanel yourShips;
-    private JPanel opponentShips;
+    private final JPanel yourShips;
     private static JFrame main;
     private JMenuItem quit, help;
-    private BattleshipBoard playerBattleshipBoard;
-    private BattleshipBoard opponentBattleshipBoard;
-    private String player;
+    private final BattleshipBoard playerBattleshipBoard;
+    private final BattleshipBoard opponentBattleshipBoard;
+    private final String player;
+    public int hitCount = 0;
 
 
-    // Board constructor
+    /**
+     * Constructor for board.
+     * @param playerBattleshipBoard your board
+     * @param opponentBattleshipBoard your opponents board
+     * @param bgLength size of the board
+     * @param player player identity
+     */
     public BoardGUI(BattleshipBoard playerBattleshipBoard, BattleshipBoard opponentBattleshipBoard, int bgLength, String player){
         this.playerBattleshipBoard = playerBattleshipBoard;
         this.opponentBattleshipBoard = opponentBattleshipBoard;
         this.player = player;
         yourShips = new JPanel();
-        opponentShips = new JPanel();
+        JPanel opponentShips = new JPanel();
         yourShips.setLayout(new GridLayout(bgLength,bgLength,5,5));
         opponentShips.setLayout(new GridLayout(bgLength,bgLength,5,5));
         mainGUI();
-        main.add(initPlayerBoard(yourShips));
         main.add(initOpponentBoard(opponentShips));
+        main.add(initPlayerBoard(yourShips));
         main.setVisible(true);
     }
 
+
+    /**
+     * Main GUI (JFrame) of the board.
+     */
     public void mainGUI(){
         main = new JFrame("BATTLESHIP");
         main.setSize(1000,500);
@@ -66,20 +76,24 @@ public class BoardGUI extends JFrame {
         main.setUndecorated(true);
     }
 
+
+    /**
+     * generate the board that holds your ships. Called once in creation and again after the player has fired
+     * @param board the JPanel holding your ships
+     * @return the now built board
+     */
     public JPanel initPlayerBoard(JPanel board) {
         for (String[] strings : playerBattleshipBoard.getPlayer()) {
             for (String string : strings) {
                 JButton button = new JButton(string);
                 button.setFont(new Font("Verdana", Font.PLAIN, 20));
-
-
+                
                 if(button.getText().equals("*")){
                     button.setBackground(Color.GREEN);
                 }
                 else if(button.getText().equals("X")){
                     button.setBackground(Color.RED);
                 }
-
 
                 button.setFocusPainted(false);
                 button.setEnabled(false);
@@ -94,7 +108,11 @@ public class BoardGUI extends JFrame {
     }
 
 
-    public int hitCount = 0;
+    /**
+     * This holds the logic for building your opponents board and also the listener for player interaction.
+     * @param board your opponents board
+     * @return their board after it has been built
+     */
     public JPanel initOpponentBoard(JPanel board) {
         int i = 0;
         for (String[] strings : opponentBattleshipBoard.getPlayer()) {
@@ -117,7 +135,8 @@ public class BoardGUI extends JFrame {
                                 String[][] hitThis = opponentBattleshipBoard.getBoard();
                                 button.setBackground(Color.RED);
                                 hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player, opponentBattleshipBoard);
-                                System.out.println(hitCount);
+                                updateYourBoard();
+
                                 if(hitCount == 5){
                                     JOptionPane.showMessageDialog(main, "You win!");
 
@@ -134,7 +153,7 @@ public class BoardGUI extends JFrame {
 
                                 String[][] hitThis = opponentBattleshipBoard.getBoard();
                                 playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player, opponentBattleshipBoard);
-
+                                updateYourBoard();
 
                             }
                         }
@@ -151,5 +170,16 @@ public class BoardGUI extends JFrame {
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return board;
+    }
+
+
+    /**
+     * Method to update the board that represents your pieces after the opponent has fired.
+     */
+    private void updateYourBoard() {
+        yourShips.setVisible(false);
+        yourShips.removeAll();
+        initPlayerBoard(yourShips);
+        yourShips.setVisible(true);
     }
 }
