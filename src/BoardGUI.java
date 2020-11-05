@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class Board extends JFrame implements Runnable {
+public class BoardGUI extends JFrame {
 
     private JPanel yourShips;
     private JPanel opponentShips;
@@ -11,12 +11,14 @@ public class Board extends JFrame implements Runnable {
     private JMenuItem quit, help;
     private BattleshipBoard playerBattleshipBoard;
     private BattleshipBoard opponentBattleshipBoard;
+    private String player;
 
 
     // Board constructor
-    public Board(BattleshipBoard playerBattleshipBoard, BattleshipBoard opponentBattleshipBoard, int bgLength){
+    public BoardGUI(BattleshipBoard playerBattleshipBoard, BattleshipBoard opponentBattleshipBoard, int bgLength, String player){
         this.playerBattleshipBoard = playerBattleshipBoard;
         this.opponentBattleshipBoard = opponentBattleshipBoard;
+        this.player = player;
         yourShips = new JPanel();
         opponentShips = new JPanel();
         yourShips.setLayout(new GridLayout(bgLength,bgLength,5,5));
@@ -69,6 +71,16 @@ public class Board extends JFrame implements Runnable {
             for (String string : strings) {
                 JButton button = new JButton(string);
                 button.setFont(new Font("Verdana", Font.PLAIN, 20));
+
+
+                if(button.getText().equals("*")){
+                    button.setBackground(Color.GREEN);
+                }
+                else if(button.getText().equals("X")){
+                    button.setBackground(Color.RED);
+                }
+
+
                 button.setFocusPainted(false);
                 button.setEnabled(false);
                 board.add(button);
@@ -81,38 +93,63 @@ public class Board extends JFrame implements Runnable {
         return board;
     }
 
+
+    public int hitCount = 0;
     public JPanel initOpponentBoard(JPanel board) {
+        int i = 0;
         for (String[] strings : opponentBattleshipBoard.getPlayer()) {
+            int k = 0;
             for (String string : strings) {
                 JButton button = new JButton(string);
                 button.setFont(new Font("Verdana", Font.PLAIN, 20));
                 button.setBackground(Color.WHITE);
                 button.setForeground(Color.WHITE);
+                int finalI = i;
+                int finalK = k;
                 button.addActionListener(actionEvent -> {
-                    if (button.getText().equals("o")) {
-                        button.setBackground(Color.RED);
-                        JOptionPane.showMessageDialog(main, "Hit!");
-                        button.setBackground(Color.RED);
-                    } else if (button.getText().equals("~")) {
-                        button.setBackground(Color.GREEN);
-                        System.out.println(button.getX() + " " + button.getY());
-                    }
+
+                        if (button.getBackground() == Color.RED || button.getBackground() == Color.GREEN){
+                            JOptionPane.showMessageDialog(main, "Already fired here, please try again!");
+                        } else {
+                            if (button.getText().equals("o")) {
+                                button.setBackground(Color.RED);
+                                JOptionPane.showMessageDialog(main, "Hit!");
+                                String[][] hitThis = opponentBattleshipBoard.getBoard();
+                                button.setBackground(Color.RED);
+                                hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player, opponentBattleshipBoard);
+                                System.out.println(hitCount);
+                                if(hitCount == 5){
+                                    JOptionPane.showMessageDialog(main, "You win!");
+
+
+                                    // here we need to return or do something to the players score
+
+
+                                    main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
+                                }
+                            } else if (button.getText().equals("~")) {
+                                button.setBackground(Color.GREEN);
+                                System.out.println(button.getX() + " " + button.getY());
+
+
+                                String[][] hitThis = opponentBattleshipBoard.getBoard();
+                                playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player, opponentBattleshipBoard);
+
+
+                            }
+                        }
                 });
+
 
                 button.setFocusPainted(false);
                 board.add(button);
+                k++;
             }
+            i++;
         }
         board.setBorder(BorderFactory.createTitledBorder("Firing Range"));
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return board;
-    }
-
-
-
-    @Override
-    public void run() {
-
     }
 }

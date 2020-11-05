@@ -63,28 +63,30 @@ public class Captain {
         BattleshipBoard playerOne = new BattleshipBoard(bgLength);
         BattleshipBoard ai = new BattleshipBoard(bgLength);
 
-        while(true){
-            playerOne.printBoard();
-            // fire and pass in your opponents board to confirm if hit worked
-            if(playerOne.playerFire(ai.getBoard())){
-                ai.shipSunk();
-            }
-            // check to see if the enemies ships are all gone
-            if(ai.getShipsRemaining() == 0){
-                System.out.println(playerOneName + " wins!");
-                updatePlayer(playerOneName, "AI");
-                break;
-            }
-            // as above, so below
-            if(ai.aiFire(playerOne.getBoard())){
-                playerOne.shipSunk();
-            }
-            if(playerOne.getShipsRemaining() == 0){
-                System.out.println("Computer wins!");
-                updatePlayer("AI", playerOneName);
-                break;
-            }
-        }
+        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, playerOneName);
+
+//        while(true){
+//            playerOne.printBoard();
+//            // fire and pass in your opponents board to confirm if hit worked
+//            if(playerOne.playerFire(ai.getBoard())){
+//                ai.shipSunk();
+//            }
+//            // check to see if the enemies ships are all gone
+//            if(ai.getShipsRemaining() == 0){
+//                System.out.println(playerOneName + " wins!");
+//                updatePlayer(playerOneName, "AI");
+//                break;
+//            }
+//            // as above, so below
+//            if(ai.aiFire(playerOne.getBoard())){
+//                playerOne.shipSunk();
+//            }
+//            if(playerOne.getShipsRemaining() == 0){
+//                System.out.println("Computer wins!");
+//                updatePlayer("AI", playerOneName);
+//                break;
+//            }
+//        }
     }
 
 
@@ -106,8 +108,8 @@ public class Captain {
         BattleshipBoard playerTwo = new BattleshipBoard(bgLength);
 
         // GUI implementation
-        //Board playerOneGUI = new Board(playerOne, playerTwo, bgLength);
-        //Board playerTwoGUI = new Board(playerTwo, playerOne, bgLength);
+//        Board playerOneGUI = new Board(playerOne, playerTwo, bgLength);
+//        Board playerTwoGUI = new Board(playerTwo, playerOne, bgLength);
 
         while(true){
             playerOne.printBoard();

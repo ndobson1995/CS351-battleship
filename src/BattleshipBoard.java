@@ -234,4 +234,20 @@ public class BattleshipBoard {
     public int getShipsRemaining(){
         return ships;
     }
+
+
+
+
+
+
+
+    public int guiFire(String[][] opponentBoard, int yCoord, int xCoord, String playerIdentity, BattleshipBoard opponent){
+        boolean hit = hitOrMiss(opponentBoard, xCoord, yCoord, playerIdentity);
+        int hitCount = 0;
+        if(hit){
+            hitCount++;
+        }
+        opponent.aiFire(player);
+        return hitCount;
+    }
 }
