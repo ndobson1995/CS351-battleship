@@ -13,8 +13,11 @@ public class Captain {
      * @param args normal arguments
      */
     public static void main(String[] args) {
-
         scanner = new Scanner(System.in);
+
+        //todo add in sonja login portal call here
+        LoginPortal loginPortal = new LoginPortal();
+        //loginPortal.login();
 
         System.out.println("Welcome to Battleship!");
         System.out.println("Play solo(1), with someone(2) or quit(0)");
