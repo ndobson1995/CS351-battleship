@@ -247,7 +247,6 @@ public class BattleshipBoard {
         if(hit){
             hitCount++;
         }
-        opponent.aiFire(player);
         return hitCount;
     }
 }

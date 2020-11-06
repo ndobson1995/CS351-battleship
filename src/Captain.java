@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 /**
  * Main driver for the program, called Captain because ships
@@ -14,39 +17,46 @@ public class Captain {
      */
     public static void main(String[] args) {
 
-        scanner = new Scanner(System.in);
+        String host = "127.0.0.1";
+        int port = 12345;
 
-        System.out.println("Welcome to Battleship!");
-        System.out.println("Play solo(1), with someone(2) or quit(0)");
+        try(Socket socket = new Socket(host, port)) {
 
-        // basic menu
-        while(true) {
-            int choice;
-            try {
-                String choiceStr = scanner.nextLine();
-                // confirm a number was entered.
-                if(choiceStr.matches("[0-9][0-9]*")){
-                    choice = Integer.parseInt(choiceStr);
-                    if (choice == 1) {
-                        soloGame();
-                    } else if (choice == 2) {
-                        multiplayer();
+
+            scanner = new Scanner(System.in);
+
+            System.out.println("Welcome to Battleship!");
+            System.out.println("Play solo(1), with someone(2) or quit(0)");
+
+            // basic menu
+            while (true) {
+                int choice;
+                try {
+                    String choiceStr = scanner.nextLine();
+                    // confirm a number was entered.
+                    if (choiceStr.matches("[0-9][0-9]*")) {
+                        choice = Integer.parseInt(choiceStr);
+                        if (choice == 1) {
+                            soloGame();
+                        } else if (choice == 2) {
+                            multiplayer();
+                        } else if (choice == 0) {
+                            System.out.println("Thanks for playing!");
+                            System.exit(0);
+                        } else {
+                            System.out.println("Please enter 1, 2 or 0");
+                        }
+                    } else {
+                        System.out.println("Please enter a number");
                     }
-                    else if(choice == 0){
-                        System.out.println("Thanks for playing!");
-                        System.exit(0);
-                    }
-                    else{
-                        System.out.println("Please enter 1, 2 or 0");
-                    }
-                }
-                else{
-                    System.out.println("Please enter a number");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -54,7 +64,7 @@ public class Captain {
     /**
      * Controlling method for the solo game against the AI.
      */
-    private static void soloGame() {
+    public static void soloGame() {
         System.out.print("Player One, enter your name: ");
         String playerOneName = scanner.nextLine();
 
@@ -93,7 +103,7 @@ public class Captain {
     /**
      * Controlling method for the multiplayer game (2 real players)
      */
-    private static void multiplayer() {
+    public static void multiplayer() {
         System.out.print("Player One, enter your name: ");
         String playerOneName = scanner.nextLine();
 
