@@ -242,15 +242,15 @@ public class BattleshipBoard {
      * @param yCoord y coord
      * @param xCoord x coord
      * @param playerIdentity who fired
-     * @param opponent board of opponent
-     * @return
+     * @return the
      */
-    public int guiFire(String[][] opponentBoard, int yCoord, int xCoord, String playerIdentity, BattleshipBoard opponent){
+    public int guiFire(String[][] opponentBoard, int yCoord, int xCoord, String playerIdentity){
         boolean hit = hitOrMiss(opponentBoard, xCoord, yCoord, playerIdentity);
-        int hitCount = 0;
         if(hit){
-            hitCount++;
+            return 1;
         }
-        return hitCount;
+        else {
+            return 0;
+        }
     }
 }

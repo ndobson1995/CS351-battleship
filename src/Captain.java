@@ -21,15 +21,12 @@ public class Captain {
         int port = 12345;
 
         try(Socket socket = new Socket(host, port)) {
-
-
             scanner = new Scanner(System.in);
-
-            System.out.println("Welcome to Battleship!");
-            System.out.println("Play solo(1), with someone(2) or quit(0)");
 
             // basic menu
             while (true) {
+                System.out.println("Welcome to Battleship!");
+                System.out.println("Play solo(1), with someone(2) or quit(0)");
                 int choice;
                 try {
                     String choiceStr = scanner.nextLine();
@@ -75,6 +72,7 @@ public class Captain {
 
         BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, playerOneName);
 
+
 //        while(true){
 //            playerOne.printBoard();
 //            // fire and pass in your opponents board to confirm if hit worked
@@ -97,6 +95,8 @@ public class Captain {
 //                break;
 //            }
 //        }
+
+        System.out.println("Press enter to continue");
     }
 
 

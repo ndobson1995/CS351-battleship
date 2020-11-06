@@ -13,6 +13,7 @@ public class BoardGUI extends JFrame {
     private final String player;
     private int hitCount = 0;
     private int aiHitCount = 0;
+    private boolean active;
 
 
     /**
@@ -26,6 +27,7 @@ public class BoardGUI extends JFrame {
         this.playerBattleshipBoard = playerBattleshipBoard;
         this.opponentBattleshipBoard = opponentBattleshipBoard;
         this.player = player;
+        this.active = true;
         yourShips = new JPanel();
         JPanel opponentShips = new JPanel();
         yourShips.setLayout(new GridLayout(bgLength,bgLength,5,5));
@@ -46,7 +48,7 @@ public class BoardGUI extends JFrame {
         main.setLayout(new GridLayout(1,2));
         main.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
-                System.exit(0);
+                main.dispose();
             }
         });
         JMenuBar menuBar = new JMenuBar();
@@ -58,7 +60,7 @@ public class BoardGUI extends JFrame {
                 int result = JOptionPane.showConfirmDialog((Component) e.getSource(),
                         "Close this application?");
                 if (result == JOptionPane.YES_OPTION) {
-                    System.exit(0);
+                    main.dispose();
                 } else if (result == JOptionPane.NO_OPTION) {
                     System.out.println("Do nothing");
                 }
@@ -103,7 +105,7 @@ public class BoardGUI extends JFrame {
         }
         board.setBorder(BorderFactory.createTitledBorder("Your Board"));
         setSize(400,400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         return board;
     }
@@ -135,23 +137,22 @@ public class BoardGUI extends JFrame {
                                 JOptionPane.showMessageDialog(main, "Hit!");
                                 String[][] hitThis = opponentBattleshipBoard.getBoard();
                                 button.setBackground(Color.RED);
-                                hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player, opponentBattleshipBoard);
+                                hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
                                 if(hitCount == 5){
                                     JOptionPane.showMessageDialog(main, "You win!");
 
+                                    main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
 
                                     // here we need to return or do something to the players score
 
 
-                                    main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
                                 }
-                                controlAIFiring();
                             } else if (button.getText().equals("~")) {
                                 button.setBackground(Color.GREEN);
                                 String[][] hitThis = opponentBattleshipBoard.getBoard();
-                                aiHitCount = aiHitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player, opponentBattleshipBoard);
-                                controlAIFiring();
+                                aiHitCount = aiHitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
                             }
+                            controlAIFiring();
                         }
                 });
 
@@ -164,7 +165,6 @@ public class BoardGUI extends JFrame {
         }
         board.setBorder(BorderFactory.createTitledBorder("Firing Range"));
         setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return board;
     }
 
