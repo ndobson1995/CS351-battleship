@@ -13,7 +13,6 @@ public class BoardGUI extends JFrame {
     private final String player;
     private int hitCount = 0;
     private int aiHitCount = 0;
-    private boolean active;
 
 
     /**
@@ -27,7 +26,6 @@ public class BoardGUI extends JFrame {
         this.playerBattleshipBoard = playerBattleshipBoard;
         this.opponentBattleshipBoard = opponentBattleshipBoard;
         this.player = player;
-        this.active = true;
         yourShips = new JPanel();
         JPanel opponentShips = new JPanel();
         yourShips.setLayout(new GridLayout(bgLength,bgLength,5,5));

@@ -96,7 +96,15 @@ public class Captain {
 //            }
 //        }
 
-        System.out.println("Press enter to continue");
+
+
+        // don't restart the loop until a key is pressed (CLI, not GUI).
+        System.out.println("Press any key to continue");
+        try {
+            int read = System.in.read(new byte[2]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
