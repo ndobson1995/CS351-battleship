@@ -236,11 +236,15 @@ public class BattleshipBoard {
     }
 
 
-
-
-
-
-
+    /**
+     * Logic controlling the firing using the GUI
+     * @param opponentBoard boardarray of firing players opponent
+     * @param yCoord y coord
+     * @param xCoord x coord
+     * @param playerIdentity who fired
+     * @param opponent board of opponent
+     * @return
+     */
     public int guiFire(String[][] opponentBoard, int yCoord, int xCoord, String playerIdentity, BattleshipBoard opponent){
         boolean hit = hitOrMiss(opponentBoard, xCoord, yCoord, playerIdentity);
         int hitCount = 0;
