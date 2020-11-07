@@ -189,8 +189,8 @@ public class BattleshipBoard {
             // first, does it hit?
             if (!opponentBoard[yCoordinate][xCoordinate].equals("*") &&
                     !opponentBoard[yCoordinate][xCoordinate].equals("X")) {
-                        return hitOrMiss(opponentBoard, xCoordinate, yCoordinate, "AI");
-                    }
+                return hitOrMiss(opponentBoard, xCoordinate, yCoordinate, "AI");
+            }
         }
     }
 

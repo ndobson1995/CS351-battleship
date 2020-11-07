@@ -18,7 +18,7 @@ public class Captain {
     public static void main(String[] args) {
 
         String host = "127.0.0.1";
-        int port = 12345;
+        int port = 12346;
 
         try(Socket socket = new Socket(host, port)) {
             scanner = new Scanner(System.in);
@@ -62,16 +62,21 @@ public class Captain {
      * Controlling method for the solo game against the AI.
      */
     public static void soloGame() {
+        boolean cont = true;
         System.out.print("Player One, enter your name: ");
         String playerOneName = scanner.nextLine();
+        while(cont) {
 
-        // here is where we'd put the file checking for the player
+            // here is where we'd put the file checking for the player perhaps?
 
-        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-        BattleshipBoard ai = new BattleshipBoard(bgLength);
+            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+            BattleshipBoard ai = new BattleshipBoard(bgLength);
 
-        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, playerOneName);
+            BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, playerOneName);
 
+            // don't restart the loop until a key is pressed (CLI, not GUI).
+            cont = rematch();
+        }
 
 //        while(true){
 //            playerOne.printBoard();
@@ -95,16 +100,6 @@ public class Captain {
 //                break;
 //            }
 //        }
-
-
-
-        // don't restart the loop until a key is pressed (CLI, not GUI).
-        System.out.println("Press any key to continue");
-        try {
-            int read = System.in.read(new byte[2]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -121,37 +116,65 @@ public class Captain {
         String playerTwoName = scanner.nextLine();
 
         // and here is for player two.
+        boolean cont = true;
+        while(cont) {
+            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+            BattleshipBoard playerTwo = new BattleshipBoard(bgLength);
 
-        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-        BattleshipBoard playerTwo = new BattleshipBoard(bgLength);
-
-        // GUI implementation
+            // GUI implementation
 //        Board playerOneGUI = new Board(playerOne, playerTwo, bgLength);
 //        Board playerTwoGUI = new Board(playerTwo, playerOne, bgLength);
 
-        while(true){
-            playerOne.printBoard();
-            playerTwo.printBoard();
-            // fire and pass in your opponents board to confirm if hit worked
-            if(playerOne.playerFire(playerTwo.getBoard())){
-                playerTwo.shipSunk();
+            while (true) {
+                playerOne.printBoard();
+                playerTwo.printBoard();
+                // fire and pass in your opponents board to confirm if hit worked
+                if (fire(playerOneName, playerTwoName, playerOne, playerTwo)) break;
+                // as above, so below
+                if (fire(playerTwoName, playerOneName, playerTwo, playerOne)) break;
             }
-            // check to see if the enemies ships are all gone
-            if(playerTwo.getShipsRemaining() == 0){
-                System.out.println(playerOneName + " wins!");
-                updatePlayer(playerOneName, playerTwoName);
+            cont = rematch();
+        }
+    }
+
+    private static boolean rematch() {
+        while(true) {
+            System.out.println("Would you like to play again? (Y/N)");
+            String choice = scanner.nextLine();
+            if (choice.equalsIgnoreCase("y")) {
                 break;
             }
-            // as above, so below
-            if(playerTwo.playerFire(playerOne.getBoard())){
-                playerOne.shipSunk();
+            else if (choice.equalsIgnoreCase("n")) {
+                return false;
             }
-            if(playerOne.getShipsRemaining() == 0){
-                System.out.println(playerTwoName + " wins!");
-                updatePlayer(playerTwoName, playerOneName);
-                break;
+            else{
+                System.out.println("Please enter a Y or N");
             }
         }
+        return true;
+    }
+
+
+    /**
+     * FIRE
+     * @param player player firing
+     * @param opponent player being fired at
+     * @param playerBoard player firings board
+     * @param opponentBoard player being fired ats board
+     * @return boolean if it hit or not
+     */
+    private static boolean fire(String player, String opponent, BattleshipBoard playerBoard, BattleshipBoard opponentBoard) {
+        System.out.println(opponent + " fire");
+
+        if(playerBoard.playerFire(opponentBoard.getBoard())){
+            opponentBoard.shipSunk();
+        }
+        if(opponentBoard.getShipsRemaining() == 0){
+            System.out.println(player + " wins!");
+            updatePlayer(player, opponent);
+            return true;
+        }
+        return false;
     }
 
 

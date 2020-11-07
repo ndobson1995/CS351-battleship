@@ -13,6 +13,7 @@ public class BoardGUI extends JFrame {
     private final String player;
     private int hitCount = 0;
     private int aiHitCount = 0;
+    private boolean win;
 
 
     /**
@@ -127,31 +128,31 @@ public class BoardGUI extends JFrame {
                 int finalK = k;
                 button.addActionListener(actionEvent -> {
 
-                        if (button.getBackground() == Color.RED || button.getBackground() == Color.GREEN){
-                            JOptionPane.showMessageDialog(main, "Already fired here, please try again!");
-                        } else {
-                            if (button.getText().equals("o")) {
-                                button.setBackground(Color.RED);
-                                JOptionPane.showMessageDialog(main, "Hit!");
-                                String[][] hitThis = opponentBattleshipBoard.getBoard();
-                                button.setBackground(Color.RED);
-                                hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
-                                if(hitCount == 5){
-                                    JOptionPane.showMessageDialog(main, "You win!");
+                    if (button.getBackground() == Color.RED || button.getBackground() == Color.GREEN){
+                        JOptionPane.showMessageDialog(main, "Already fired here, please try again!");
+                    } else {
+                        if (button.getText().equals("o")) {
+                            button.setBackground(Color.RED);
+                            JOptionPane.showMessageDialog(main, "Hit!");
+                            String[][] hitThis = opponentBattleshipBoard.getBoard();
+                            button.setBackground(Color.RED);
+                            hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
+                            if(hitCount == 5){
+                                JOptionPane.showMessageDialog(main, "You win!");
 
-                                    main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
+                                main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
 
-                                    // here we need to return or do something to the players score
+                                // here we need to return or do something to the players score
 
-
-                                }
-                            } else if (button.getText().equals("~")) {
-                                button.setBackground(Color.GREEN);
-                                String[][] hitThis = opponentBattleshipBoard.getBoard();
-                                aiHitCount = aiHitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
+                                controlAIFiring();
                             }
+                        } else if (button.getText().equals("~")) {
+                            button.setBackground(Color.GREEN);
+                            String[][] hitThis = opponentBattleshipBoard.getBoard();
+                            aiHitCount = aiHitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
                             controlAIFiring();
                         }
+                    }
                 });
 
 

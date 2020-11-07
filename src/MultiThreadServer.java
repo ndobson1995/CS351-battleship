@@ -8,7 +8,7 @@ public class MultiThreadServer {
     public static void main(String[] args) {
         ServerSocket server = null;
         try{
-            server = new ServerSocket(12345);
+            server = new ServerSocket(12346);
             System.out.println("Server running on port: " + server.getLocalPort());
             server.setReuseAddress(true);
             while(true) {
