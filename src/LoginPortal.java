@@ -47,7 +47,7 @@ public class LoginPortal extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         String userName = username_text.getText();
-        boolean value = checkDetailsAreValid(userName);
+        Boolean value = checkDetailsAreValid(userName);
         if (value==false){
             message.setText(" Hello " + userName.trim() + "");
             saveDetailsToFile(userName,true);
@@ -61,13 +61,15 @@ public class LoginPortal extends JFrame implements ActionListener{
      * This method will take in the details and check the file to make sure the player is not currently logged in
      */
     private boolean checkDetailsAreValid(String playername) {
-        BufferedWriter bf = null;
-        try{
-            bf = new BufferedWriter(new FileWriter("login-data.txt") );
+        //BufferedWriter bf = null;
+       // try{
+            //bf = new BufferedReader(new FileReader("login-data.txt") );
+
+
+        //todo IS THIS SEARCHING IN THE FILE OR THE HASHMAP?!!
             for(Map.Entry<String, Boolean> entry : loginMap.entrySet()) {
                 if (loginMap.containsKey(playername)) {
-                    Boolean value = loginMap.get(playername);
-                    System.out.println(loginMap.get(playername));
+                    boolean value = loginMap.get(playername);
                     if (value == true) {
                         message.setText("You are already active");
                         return true;
@@ -78,34 +80,38 @@ public class LoginPortal extends JFrame implements ActionListener{
                     return false;
                 }
             }
-        } catch(FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    return true;
+    return false;
     }
+//        } catch(FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    return false;
+//    }
 
     /**
      * This method will save the details to the file
      */
     private void saveDetailsToFile(String playername,boolean activePlayer){
-        loginMap.put(playername, true);
-        BufferedWriter bf = null;
+        loginMap.put(playername, activePlayer);
+        //BufferedWriter bf = null;
         try{
-            bf = new BufferedWriter(new FileWriter("login-data.txt") );
+            FileWriter fw = new FileWriter("login-data.txt",true);
+            BufferedWriter bf = new BufferedWriter(fw);
+
             for(Map.Entry<String, Boolean> entry : loginMap.entrySet()){
-                bf.write( entry.getKey() + ":" + entry.getValue() );
+                bf.append( entry.getKey() + ":" + entry.getValue() );
                 bf.newLine();
             }
-            bf.flush();
+            bf.close();
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println("debug --> heres the map of logins "+loginMap);
+        System.out.println("debug --> here's the map of logins " + loginMap);
 
 
         // todo after you stop playing the game need to get back to the file and set active player to false
