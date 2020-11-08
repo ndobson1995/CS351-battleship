@@ -12,12 +12,12 @@ public class LoginPortal extends JFrame implements ActionListener{
     JLabel username_label, message;
     JTextField username_text;
     JButton submit;
-    HashMap<String, Boolean> loginMap = new HashMap<String, Boolean>();
+    Map<String, Boolean> loginMap = new HashMap<String, Boolean>();
 
 
-    public static void main(String[] args) {
-        new LoginPortal();
-    }
+//    public static void main(String[] args) {
+//        new LoginPortal();
+//    }
 
     LoginPortal (){
         username_label = new JLabel();
@@ -47,7 +47,12 @@ public class LoginPortal extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         String userName = username_text.getText();
-        Boolean value = checkDetailsAreValid(userName);
+        Boolean value = null;
+        try {
+            value = checkDetailsAreValid(userName);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
         if (value==false){
             message.setText(" Hello " + userName.trim() + "");
             saveDetailsToFile(userName,true);
@@ -56,25 +61,19 @@ public class LoginPortal extends JFrame implements ActionListener{
             }
     }
 
-
     /**
      * This method will take in the details and check the file to make sure the player is not currently logged in
      */
-    private boolean checkDetailsAreValid(String playername) {
-        //BufferedWriter bf = null;
-       // try{
-            //bf = new BufferedReader(new FileReader("login-data.txt") );
-
-
-        //todo IS THIS SEARCHING IN THE FILE OR THE HASHMAP?!!
-            for(Map.Entry<String, Boolean> entry : loginMap.entrySet()) {
-                if (loginMap.containsKey(playername)) {
-                    boolean value = loginMap.get(playername);
-                    if (value == true) {
-                        message.setText("You are already active");
-                        return true;
-                    } else {
-                        return false;
+    private boolean checkDetailsAreValid(String playername) throws IOException {
+        loginMap = getHashMapFromFile();
+        for(Map.Entry<String, Boolean> entry : loginMap.entrySet()) {
+            if (loginMap.containsKey(playername)) {
+                boolean value = loginMap.get(playername);
+                if (value == true) {
+                    message.setText("You are already active");
+                    return true;
+                } else {
+                    return false;
                     }
                 } else {
                     return false;
@@ -82,20 +81,13 @@ public class LoginPortal extends JFrame implements ActionListener{
             }
     return false;
     }
-//        } catch(FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    return false;
-//    }
+
 
     /**
      * This method will save the details to the file
      */
-    private void saveDetailsToFile(String playername,boolean activePlayer){
+    public void saveDetailsToFile(String playername,boolean activePlayer){
         loginMap.put(playername, activePlayer);
-        //BufferedWriter bf = null;
         try{
             FileWriter fw = new FileWriter("login-data.txt",true);
             BufferedWriter bf = new BufferedWriter(fw);
@@ -113,7 +105,40 @@ public class LoginPortal extends JFrame implements ActionListener{
 
         System.out.println("debug --> here's the map of logins " + loginMap);
 
-
         // todo after you stop playing the game need to get back to the file and set active player to false
+    }
+
+
+    private Map<String, Boolean> getHashMapFromFile() throws IOException {
+        String filePath = "login-data.txt";
+
+        Map<String, Boolean> mapFileContents = new HashMap<String, Boolean>();
+        BufferedReader br = null;
+
+        try{
+            File file = new File(filePath);
+            br = new BufferedReader( new FileReader(file) );
+            String line = null;
+
+            while ( (line = br.readLine()) != null ){
+                String[] parts = line.split(":");
+                String player_name = parts[0].trim();
+
+                Boolean activeflag = Boolean.parseBoolean( parts[1].trim() );
+                mapFileContents.put(player_name,activeflag);
+                //System.out.println(player_name+":"+activeflag);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            if(br != null){
+                try {
+                    br.close();
+                }catch(Exception e){};
+            }
+        }
+        return mapFileContents;
+
     }
 }
