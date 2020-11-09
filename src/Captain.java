@@ -28,9 +28,6 @@ public class Captain {
             while (true) {
                 System.out.println("Welcome to Battleship!");
 
-                //todo sonja login portal
-                new LoginPortal();
-
                 System.out.println("Play solo(1), with someone(2) or quit(0)");
                 int choice;
                 try {
@@ -68,11 +65,15 @@ public class Captain {
      */
     public static void soloGame() {
         boolean cont = true;
-        System.out.print("Player One, enter your name: ");
-        String playerOneName = scanner.nextLine();
-        while(cont) {
+//        System.out.print("Player One, enter your name: ");
+//        String playerOneName = scanner.nextLine();
+        while (cont) {
 
-            // here is where we'd put the file checking for the player perhaps?
+            //todo 1. added login portal here, commented out scanner input above
+            new LoginPortal();
+
+            LoginPortal portal = new LoginPortal();
+            String playerOneName = portal.playerNamePopulated();
 
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
@@ -82,32 +83,7 @@ public class Captain {
             // don't restart the loop until a key is pressed (CLI, not GUI).
             cont = rematch();
         }
-
-//        while(true){
-//            playerOne.printBoard();
-//            // fire and pass in your opponents board to confirm if hit worked
-//            if(playerOne.playerFire(ai.getBoard())){
-//                ai.shipSunk();
-//            }
-//            // check to see if the enemies ships are all gone
-//            if(ai.getShipsRemaining() == 0){
-//                System.out.println(playerOneName + " wins!");
-//                updatePlayer(playerOneName, "AI");
-//                break;
-//            }
-//            // as above, so below
-//            if(ai.aiFire(playerOne.getBoard())){
-//                playerOne.shipSunk();
-//            }
-//            if(playerOne.getShipsRemaining() == 0){
-//                System.out.println("Computer wins!");
-//                updatePlayer("AI", playerOneName);
-//                break;
-//            }
-//        }
     }
-
-
     /**
      * Controlling method for the multiplayer game (2 real players)
      */
@@ -150,7 +126,14 @@ public class Captain {
                 break;
             }
             else if (choice.equalsIgnoreCase("n")) {
-                return false;
+                //todo 1st - call method to set active plyer to false here!!
+                LoginPortal portal = new LoginPortal();
+                portal.setActivePlayerFlagToFalse();
+                //todo 2nd - print the leaderboard here
+                new Leaderboard();
+                //todo 3rd - exit system
+                System.out.println("Goodbye. Come back soon!");
+                System.exit(0);
             }
             else{
                 System.out.println("Please enter a Y or N");

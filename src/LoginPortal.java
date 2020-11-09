@@ -15,16 +15,18 @@ public class LoginPortal extends JFrame implements ActionListener{
     Map<String, Boolean> loginMap = new HashMap<String, Boolean>();
 
 
-//    public static void main(String[] args) {
-//        new LoginPortal();
-//    }
+    public static void main(String[] args) {
+        new LoginPortal();
+    }
 
     LoginPortal (){
         username_label = new JLabel();
         username_label.setText("    User Name :");
         username_text = new JTextField();
+        //username_text = new JTextField(Playername);
 
         panel = new JPanel(new GridLayout(2, 1));
+        //panel.add(username_label);
         panel.add(username_label);
         panel.add(username_text);
 
@@ -32,7 +34,6 @@ public class LoginPortal extends JFrame implements ActionListener{
         message = new JLabel();
         panel.add(message);
         panel.add(submit);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         submit.addActionListener(this);
         add(panel, BorderLayout.CENTER);
@@ -41,6 +42,14 @@ public class LoginPortal extends JFrame implements ActionListener{
         setVisible(true);
 
         //todo there's currently only one player - how do i extend this to have more than one?
+
+        System.out.println("PLAYER NAME POPULATED IS " + username_text.toString());
+    }
+
+    public String playerNamePopulated() {
+        String playernameToReturn = username_text.toString();
+        System.out.println(playernameToReturn);
+        return playernameToReturn;
 
     }
 
@@ -54,7 +63,7 @@ public class LoginPortal extends JFrame implements ActionListener{
             e1.printStackTrace();
         }
         if (value==false){
-            message.setText(" Hello " + userName.trim() + "");
+            message.setText(" Hello " + userName.trim().toUpperCase() + "");
             saveDetailsToFile(userName,true);
         }else{
             message.setText("This user is already active.");
@@ -93,7 +102,7 @@ public class LoginPortal extends JFrame implements ActionListener{
             BufferedWriter bf = new BufferedWriter(fw);
 
             for(Map.Entry<String, Boolean> entry : loginMap.entrySet()){
-                bf.append( entry.getKey() + ":" + entry.getValue() );
+                bf.append(entry.getKey()).append(":").append(String.valueOf(entry.getValue()));
                 bf.newLine();
             }
             bf.close();
@@ -103,7 +112,7 @@ public class LoginPortal extends JFrame implements ActionListener{
             e.printStackTrace();
         }
 
-        System.out.println("debug --> here's the map of logins " + loginMap);
+        //System.out.println("debug --> here's the map of logins " + loginMap);
 
         // todo after you stop playing the game need to get back to the file and set active player to false
     }
@@ -139,6 +148,13 @@ public class LoginPortal extends JFrame implements ActionListener{
             }
         }
         return mapFileContents;
+    }
+
+    public void setActivePlayerFlagToFalse() {
+
+        //todo search the map keys using the playername variable and change the value to false
+
+
 
     }
 }
