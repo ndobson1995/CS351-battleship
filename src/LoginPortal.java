@@ -95,26 +95,24 @@ public class LoginPortal extends JFrame implements ActionListener{
     /**
      * This method will save the details to the file
      */
-    public void saveDetailsToFile(String playername,boolean activePlayer){
+    public void saveDetailsToFile(String playername,boolean activePlayer) {
         loginMap.put(playername, activePlayer);
-        try{
-            FileWriter fw = new FileWriter("login-data.txt",true);
+        try {
+            FileWriter fw = new FileWriter("login-data.txt", true);
             BufferedWriter bf = new BufferedWriter(fw);
 
-            for(Map.Entry<String, Boolean> entry : loginMap.entrySet()){
+            for (Map.Entry<String, Boolean> entry : loginMap.entrySet()) {
                 bf.append(entry.getKey()).append(":").append(String.valueOf(entry.getValue()));
                 bf.newLine();
             }
             bf.close();
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //System.out.println("debug --> here's the map of logins " + loginMap);
-
-        // todo after you stop playing the game need to get back to the file and set active player to false
     }
 
 

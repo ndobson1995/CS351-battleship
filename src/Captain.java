@@ -126,14 +126,14 @@ public class Captain {
                 break;
             }
             else if (choice.equalsIgnoreCase("n")) {
-                //todo 1st - call method to set active plyer to false here!!
-                LoginPortal portal = new LoginPortal();
-                portal.setActivePlayerFlagToFalse();
+                //todo 1st - call method to set active plyer to false
+                updatePlayerStatus();
                 //todo 2nd - print the leaderboard here
-                new Leaderboard();
+
+
+
                 //todo 3rd - exit system
-                System.out.println("Goodbye. Come back soon!");
-                System.exit(0);
+                exit();
             }
             else{
                 System.out.println("Please enter a Y or N");
@@ -159,20 +159,45 @@ public class Captain {
         }
         if(opponentBoard.getShipsRemaining() == 0){
             System.out.println(player + " wins!");
-            updatePlayer(player, opponent);
+            //todo sonja FIND WHERE THE SCORES ARE SAVED
+            displayWinnerLoser(player, opponent);
+            int playerScore=0;
+            int opponentScore=0;
+            updateWinnerLoserFile(player,playerScore, opponent, opponentScore);
             return true;
         }
         return false;
     }
 
 
+    public static void displayWinnerLoser(String winner,String loser){
+        System.out.println("The winner is " + winner);
+        System.out.println("The loser is " + loser);
+    }
+
     /**
      * @param winner player who won - file updated with win + games attempted
      * @param loser player who lost - file updated with games attempted
      */
-    public static void updatePlayer(String winner, String loser){
+    public static void updateWinnerLoserFile(String winner,int winnerScore, String loser, int loserScore){
+        Leaderboard leaderboard = new Leaderboard();
+        leaderboard.savePlayerStatstoFile(winner,winnerScore,loser,loserScore);
 
-        // This will use the file stuff Sonja is doing.
+        //todo this still doesnt take into account the games attempted, no of wins or loses YET
 
+    }
+
+
+
+    public static void updatePlayerStatus(){
+        LoginPortal portal = new LoginPortal();
+        portal.setActivePlayerFlagToFalse();
+        // todo SONJA WORK ON THIS!!!! This will use the file stuff Sonja is doing.
+
+    }
+
+    private static void exit() {
+        System.out.println("Goodbye. Come back soon!");
+        System.exit(0);
     }
 }
