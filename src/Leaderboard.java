@@ -18,10 +18,21 @@ public class Leaderboard {
     Leaderboard() {
         System.out.println("Here is the leaderboard");
     }
-//
-//    public static void main(String[] args) {
-//        savePlayerStatstoFile();
-//    }
+
+    public static void main(String[] args) {
+        updateWinnerLoserFile("winner",100,"AI", 200);
+    }
+
+
+    public static void updateWinnerLoserFile(String player,int playerWin, String opponent, int opponentLose){
+        Leaderboard leaderboard = new Leaderboard();
+        leaderboard.savePlayerStatstoFile(player, playerWin, opponent, opponentLose);
+        System.out.println("PLAYER :" + player + " SCORE: "  + playerWin);
+        System.out.println("OPONNENT :" + opponent + " SCORE: "  + opponentLose);
+
+        //todo this still doesnt take into account the games attempted, no of wins or loses YET
+
+    }
 
 //    private static void savePlayerStatstoFile() {
 //        String player="sonja";

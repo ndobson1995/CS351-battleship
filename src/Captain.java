@@ -14,8 +14,6 @@ public class Captain {
 
     private static final int bgLength = 5;
     private static Scanner scanner;
-    int playerWin;
-    int opponentLose;
     private static RMIinterface lookUp;
 
 
@@ -25,7 +23,7 @@ public class Captain {
      */
     public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
 
-        lookUp = (RMIinterface) Naming.lookup("//localhost:11100/HelloServer");       //MUST MATCH SERVER
+        lookUp = (RMIinterface) Naming.lookup("//localhost:12346/HelloServer");       //MUST MATCH SERVER
         scanner = new Scanner(System.in);
 
         // basic menu
@@ -62,14 +60,15 @@ public class Captain {
 
     public static void soloGameCLI() {
         boolean cont = true;
-//        System.out.print("Player One, enter your name: ");
-//        String playerOneName = scanner.nextLine();
-
-            //todo 1. added login portal here, commented out scanner input above
             new LoginPortal();
 
             LoginPortal portal = new LoginPortal();
             String playerOneName = portal.playerNamePopulated();
+            int playerWin =0;
+            int playerLose =0;
+            int opponentWin =0;
+            int opponentLose =0;
+
 
 
         while(cont) {
@@ -86,11 +85,9 @@ public class Captain {
                 if (ai.getShipsRemaining() == 0) {
                     System.out.println(playerOneName + " wins!");
                     displayWinnerLoser(playerOneName, "AI");
-//                  int win = playerWin++;
-//                  int lose = opponentLose++;
-//                  updateWinnerLoserFile();
-                    //todo sonja
-                    //updatePlayer(playerOneName, "AI");
+                    int win = playerWin++;
+                    int lose = opponentLose++;
+                    updateWinnerLoserFile(playerOneName,win,"AI", lose);
                     break;
                 }
                 // as above, so below
@@ -100,11 +97,9 @@ public class Captain {
                 if (playerOne.getShipsRemaining() == 0) {
                     System.out.println("Computer wins!");
                     displayWinnerLoser("AI", playerOneName);
-//                int win = opponentWin++;
-//                int lose = playerLose++;
-//                updateWinnerLoserFile();
-
-                    //updatePlayer("AI", playerOneName);
+                    int win = opponentWin++;
+                    int lose = playerLose++;
+                    updateWinnerLoserFile("AI",win,playerOneName,lose);
                     break;
                 }
             }
@@ -224,6 +219,8 @@ public class Captain {
     public static void updateWinnerLoserFile(String player,int playerWin, String opponent, int opponentLose){
         Leaderboard leaderboard = new Leaderboard();
         leaderboard.savePlayerStatstoFile(player, playerWin, opponent, opponentLose);
+        System.out.println("PLAYER :" + player + "SCORE: "  + playerWin);
+        System.out.println("OPONNENT :" + opponent + "SCORE: "  + opponentLose);
 
         //todo this still doesnt take into account the games attempted, no of wins or loses YET
 
