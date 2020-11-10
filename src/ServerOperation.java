@@ -41,14 +41,14 @@ public class ServerOperation extends UnicastRemoteObject implements RMIinterface
         BattleshipBoard playerOne = new BattleshipBoard(bgLength);
         //BattleshipBoard playerTwo = new BattleshipBoard(bgLength);
 
-        while (true) {
-            playerOne.printBoard();
-            playerTwo.printBoard();
-            // fire and pass in your opponents board to confirm if hit worked
-            if (fire(playerOneName, playerTwoName, playerOne, playerTwo)) break;
-            // as above, so below
-            if (fire(playerTwoName, playerOneName, playerTwo, playerOne)) break;
-        }
+//        while (true) {
+//            playerOne.printBoard();
+//            playerTwo.printBoard();
+//            // fire and pass in your opponents board to confirm if hit worked
+//            if (fire(playerOneName, playerTwoName, playerOne, playerTwo)) break;
+//            // as above, so below
+//            if (fire(playerTwoName, playerOneName, playerTwo, playerOne)) break;
+//        }
     }
 
 

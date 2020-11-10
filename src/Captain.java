@@ -24,11 +24,11 @@ public class Captain {
         scanner = new Scanner(System.in);
 
         // basic menu
+        System.out.println("Welcome to Battleship!");
         while (true) {
-            System.out.println("Welcome to Battleship!");
             System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
             int choice;
-            try {
+
                 String choiceStr = scanner.nextLine();
                 // confirm a number was entered.
                 if (choiceStr.matches("[0-9][0-9]*")) {
@@ -48,9 +48,6 @@ public class Captain {
                 } else {
                     System.out.println("Please enter a number");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
