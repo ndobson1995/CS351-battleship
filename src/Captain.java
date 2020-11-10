@@ -10,6 +10,8 @@ public class Captain {
 
     private static final int bgLength = 5;
     private static Scanner scanner;
+    int playerWin;
+    int opponentLose;
 
     /**
      * run the game
@@ -82,6 +84,35 @@ public class Captain {
 
             // don't restart the loop until a key is pressed (CLI, not GUI).
             cont = rematch();
+
+        while(true){
+            playerOne.printBoard();
+            // fire and pass in your opponents board to confirm if hit worked
+            if(playerOne.playerFire(ai.getBoard())){
+                ai.shipSunk();
+            }
+            // check to see if the enemies ships are all gone
+            if(ai.getShipsRemaining() == 0){
+                System.out.println(playerOneName + " wins!");
+                displayWinnerLoser(playerOneName, "AI");
+//                int win = playerWin++;
+//                int lose = opponentLose++;
+//                updateWinnerLoserFile();
+                break;
+            }
+            // as above, so below
+            if(ai.aiFire(playerOne.getBoard())){
+                playerOne.shipSunk();
+            }
+            if(playerOne.getShipsRemaining() == 0){
+                System.out.println("Computer wins!");
+                displayWinnerLoser("AI", playerOneName);
+//                int win = opponentWin++;
+//                int lose = playerLose++;
+//                updateWinnerLoserFile();
+                break;
+            }
+        }
         }
     }
     /**
@@ -161,27 +192,22 @@ public class Captain {
             System.out.println(player + " wins!");
             //todo sonja FIND WHERE THE SCORES ARE SAVED
             displayWinnerLoser(player, opponent);
-            int playerScore=0;
-            int opponentScore=0;
-            updateWinnerLoserFile(player,playerScore, opponent, opponentScore);
+            //updateWinnerLoserFile(player,playerScore, opponent, opponentScore);
             return true;
         }
         return false;
     }
 
 
-    public static void displayWinnerLoser(String winner,String loser){
+    public static void displayWinnerLoser(String winner, String loser){
         System.out.println("The winner is " + winner);
         System.out.println("The loser is " + loser);
     }
 
-    /**
-     * @param winner player who won - file updated with win + games attempted
-     * @param loser player who lost - file updated with games attempted
-     */
-    public static void updateWinnerLoserFile(String winner,int winnerScore, String loser, int loserScore){
+
+    public static void updateWinnerLoserFile(String player,int playerWin, String opponent, int opponentLose){
         Leaderboard leaderboard = new Leaderboard();
-        leaderboard.savePlayerStatstoFile(winner,winnerScore,loser,loserScore);
+        leaderboard.savePlayerStatstoFile(player, playerWin, opponent, opponentLose);
 
         //todo this still doesnt take into account the games attempted, no of wins or loses YET
 

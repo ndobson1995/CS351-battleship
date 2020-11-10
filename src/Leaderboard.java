@@ -18,14 +18,35 @@ public class Leaderboard {
     Leaderboard() {
         System.out.println("Here is the leaderboard");
     }
+//
+//    public static void main(String[] args) {
+//        savePlayerStatstoFile();
+//    }
 
-    public static void main(String[] args) {
-        savePlayerStatstoFile();
-    }
-
-    private static void savePlayerStatstoFile() {
-        savePlayerStatstoFile();
-    }
+//    private static void savePlayerStatstoFile() {
+//        String player="sonja";
+//        int playerScore=100;
+//        String opponent="kieran";
+//        int opponentScore=200;
+//        Map<String,Integer> leaderboardMap = new HashMap<String,Integer>();
+//        leaderboardMap.put(player,playerScore);
+//        leaderboardMap.put(opponent,opponentScore);
+//
+//        try{
+//            FileWriter fw = new FileWriter("leaderboard-file.txt",true);
+//            BufferedWriter bf = new BufferedWriter(fw);
+//
+//            for(Map.Entry<String, Integer> entry : leaderboardMap.entrySet()){
+//                bf.append(entry.getKey()).append(":").append(String.valueOf(entry.getValue()));
+//                bf.newLine();
+//            }
+//            bf.close();
+//        } catch(FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     public void savePlayerStatstoFile(String player,int playerScore, String opponent, int opponentScore){
