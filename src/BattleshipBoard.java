@@ -189,8 +189,8 @@ public class BattleshipBoard {
             // first, does it hit?
             if (!opponentBoard[yCoordinate][xCoordinate].equals("*") &&
                     !opponentBoard[yCoordinate][xCoordinate].equals("X")) {
-                        return hitOrMiss(opponentBoard, xCoordinate, yCoordinate, "AI");
-                    }
+                return hitOrMiss(opponentBoard, xCoordinate, yCoordinate, "AI");
+            }
         }
     }
 
@@ -236,18 +236,21 @@ public class BattleshipBoard {
     }
 
 
-
-
-
-
-
-    public int guiFire(String[][] opponentBoard, int yCoord, int xCoord, String playerIdentity, BattleshipBoard opponent){
+    /**
+     * Logic controlling the firing using the GUI
+     * @param opponentBoard boardarray of firing players opponent
+     * @param yCoord y coord
+     * @param xCoord x coord
+     * @param playerIdentity who fired
+     * @return the
+     */
+    public int guiFire(String[][] opponentBoard, int yCoord, int xCoord, String playerIdentity){
         boolean hit = hitOrMiss(opponentBoard, xCoord, yCoord, playerIdentity);
-        int hitCount = 0;
         if(hit){
-            hitCount++;
+            return 1;
         }
-        opponent.aiFire(player);
-        return hitCount;
+        else {
+            return 0;
+        }
     }
 }

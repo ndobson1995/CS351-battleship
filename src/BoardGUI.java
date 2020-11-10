@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+
 
 public class BoardGUI extends JFrame {
 
@@ -11,7 +13,9 @@ public class BoardGUI extends JFrame {
     private final BattleshipBoard playerBattleshipBoard;
     private final BattleshipBoard opponentBattleshipBoard;
     private final String player;
-    public int hitCount = 0;
+    private int hitCount = 0;
+    private int aiHitCount = 0;
+    private boolean win;
 
 
     /**
@@ -45,7 +49,7 @@ public class BoardGUI extends JFrame {
         main.setLayout(new GridLayout(1,2));
         main.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
-                System.exit(0);
+                main.dispose();
             }
         });
         JMenuBar menuBar = new JMenuBar();
@@ -57,7 +61,7 @@ public class BoardGUI extends JFrame {
                 int result = JOptionPane.showConfirmDialog((Component) e.getSource(),
                         "Close this application?");
                 if (result == JOptionPane.YES_OPTION) {
-                    System.exit(0);
+                    main.dispose();
                 } else if (result == JOptionPane.NO_OPTION) {
                     System.out.println("Do nothing");
                 }
@@ -87,7 +91,7 @@ public class BoardGUI extends JFrame {
             for (String string : strings) {
                 JButton button = new JButton(string);
                 button.setFont(new Font("Verdana", Font.PLAIN, 20));
-                
+
                 if(button.getText().equals("*")){
                     button.setBackground(Color.GREEN);
                 }
@@ -102,7 +106,7 @@ public class BoardGUI extends JFrame {
         }
         board.setBorder(BorderFactory.createTitledBorder("Your Board"));
         setSize(400,400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         return board;
     }
@@ -126,37 +130,31 @@ public class BoardGUI extends JFrame {
                 int finalK = k;
                 button.addActionListener(actionEvent -> {
 
-                        if (button.getBackground() == Color.RED || button.getBackground() == Color.GREEN){
-                            JOptionPane.showMessageDialog(main, "Already fired here, please try again!");
-                        } else {
-                            if (button.getText().equals("o")) {
-                                button.setBackground(Color.RED);
-                                JOptionPane.showMessageDialog(main, "Hit!");
-                                String[][] hitThis = opponentBattleshipBoard.getBoard();
-                                button.setBackground(Color.RED);
-                                hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player, opponentBattleshipBoard);
-                                updateYourBoard();
+                    if (button.getBackground() == Color.RED || button.getBackground() == Color.GREEN){
+                        JOptionPane.showMessageDialog(main, "Already fired here, please try again!");
+                    } else {
+                        if (button.getText().equals("o")) {
+                            button.setBackground(Color.RED);
+                            JOptionPane.showMessageDialog(main, "Hit!");
+                            String[][] hitThis = opponentBattleshipBoard.getBoard();
+                            button.setBackground(Color.RED);
+                            hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
+                            if(hitCount == 5){
+                                JOptionPane.showMessageDialog(main, "You win!");
 
-                                if(hitCount == 5){
-                                    JOptionPane.showMessageDialog(main, "You win!");
-
-
-                                    // here we need to return or do something to the players score
-
-
-                                    main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
-                                }
-                            } else if (button.getText().equals("~")) {
-                                button.setBackground(Color.GREEN);
-                                System.out.println(button.getX() + " " + button.getY());
-
-
-                                String[][] hitThis = opponentBattleshipBoard.getBoard();
-                                playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player, opponentBattleshipBoard);
-                                updateYourBoard();
+                                main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
+                                // here we need to return or do something to the players score
 
                             }
+                            controlAIFiring();
+
+                        } else if (button.getText().equals("~")) {
+                            button.setBackground(Color.GREEN);
+                            String[][] hitThis = opponentBattleshipBoard.getBoard();
+                            aiHitCount = aiHitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
+                            controlAIFiring();
                         }
+                    }
                 });
 
 
@@ -168,8 +166,22 @@ public class BoardGUI extends JFrame {
         }
         board.setBorder(BorderFactory.createTitledBorder("Firing Range"));
         setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return board;
+    }
+
+
+    /**
+     * control the AI firing and confirm the AI has/hasn't won
+     */
+    private void controlAIFiring() {
+        if (opponentBattleshipBoard.aiFire(playerBattleshipBoard.getPlayer())) {
+            aiHitCount++;
+        }
+        if (aiHitCount == 5) {
+            JOptionPane.showMessageDialog(main, "You Lose!");
+            main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
+        }
+        updateYourBoard();
     }
 
 
