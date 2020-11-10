@@ -62,8 +62,8 @@ public class Captain {
 
     public static void soloGameCLI() {
         boolean cont = true;
-        System.out.print("Player One, enter your name: ");
-        String playerOneName = scanner.nextLine();
+//        System.out.print("Player One, enter your name: ");
+//        String playerOneName = scanner.nextLine();
 
             //todo 1. added login portal here, commented out scanner input above
             new LoginPortal();
@@ -71,8 +71,7 @@ public class Captain {
             LoginPortal portal = new LoginPortal();
             String playerOneName = portal.playerNamePopulated();
 
-            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-            BattleshipBoard ai = new BattleshipBoard(bgLength);
+
         while(cont) {
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
@@ -91,7 +90,7 @@ public class Captain {
 //                  int lose = opponentLose++;
 //                  updateWinnerLoserFile();
                     //todo sonja
-                    updatePlayer(playerOneName, "AI");
+                    //updatePlayer(playerOneName, "AI");
                     break;
                 }
                 // as above, so below
@@ -105,14 +104,14 @@ public class Captain {
 //                int lose = playerLose++;
 //                updateWinnerLoserFile();
 
-                    updatePlayer("AI", playerOneName);
+                    //updatePlayer("AI", playerOneName);
                     break;
                 }
             }
             cont = rematch();
         }
         }
-    }
+
 
 
     /**
@@ -188,29 +187,6 @@ public class Captain {
 //        else{
 //            System.out.println("Please enter a Y or N");
 //        }
-    }
-
-
-    /**
-     * FIRE
-     * @param player player firing
-     * @param opponent player being fired at
-     * @param playerBoard player firings board
-     * @param opponentBoard player being fired ats board
-     * @return boolean if it hit or not
-     */
-    private static boolean fire(String player, String opponent, BattleshipBoard playerBoard, BattleshipBoard opponentBoard) {
-        System.out.println(opponent + " fire");
-
-        if(playerBoard.playerFire(opponentBoard.getBoard())){
-            opponentBoard.shipSunk();
-        }
-        if(opponentBoard.getShipsRemaining() == 0){
-            System.out.println(player + " wins!");
-            updatePlayer(player, opponent);
-            return true;
-        }
-        return false;
     }
 
 
