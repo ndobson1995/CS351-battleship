@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+
 
 public class BoardGUI extends JFrame {
 
@@ -141,11 +143,11 @@ public class BoardGUI extends JFrame {
                                 JOptionPane.showMessageDialog(main, "You win!");
 
                                 main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
-
                                 // here we need to return or do something to the players score
 
-                                controlAIFiring();
                             }
+                            controlAIFiring();
+
                         } else if (button.getText().equals("~")) {
                             button.setBackground(Color.GREEN);
                             String[][] hitThis = opponentBattleshipBoard.getBoard();
