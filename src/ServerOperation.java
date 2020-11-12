@@ -1,4 +1,5 @@
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -13,11 +14,10 @@ public class ServerOperation extends UnicastRemoteObject implements RMIinterface
 
     public static void main(String[] args) {
         try{
-            LocateRegistry.createRegistry(12346);
-            Naming.rebind("//localhost:11100/HelloServer", new ServerOperation());
+            LocateRegistry.createRegistry(1298);
+            Naming.rebind("//127.0.0.1:1298/HelloServer", new ServerOperation());
             System.out.println("Server running");
-        }
-        catch(Exception e){
+        } catch(Exception e){
             System.err.println("Server Exception: " + e.toString());
             e.printStackTrace();
         }

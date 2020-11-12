@@ -23,7 +23,7 @@ public class Captain {
      */
     public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
 
-        lookUp = (RMIinterface) Naming.lookup("//localhost:12346/HelloServer");       //MUST MATCH SERVER
+        lookUp = (RMIinterface) Naming.lookup("//127.0.0.1:1298/HelloServer");       //MUST MATCH SERVER
         scanner = new Scanner(System.in);
 
         // basic menu
