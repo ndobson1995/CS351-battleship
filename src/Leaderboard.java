@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class Leaderboard {
-    Scanner scanner = new Scanner(System.in);
-
     private ArrayList<String> nestedLeaderboardMap = new ArrayList<String>();
     private ArrayList<String> leaderboardMap = new ArrayList<String>();
 
@@ -16,11 +14,11 @@ public class Leaderboard {
     }
 
     public static void main(String[] args) {
-        updateWinnerLoserFile("winner",2,3, 1,"AI",3,5,4);
+        TESTMETHOD_updateWinnerLoserFile("sonja",2,3, 1,"AI",3,5,4);
     }
 
-
-    public static void updateWinnerLoserFile(String player,int playerWin, int playerLoses, int playerAttempts,String opponent, int opponentWins, int opponentLose, int oponentAttempts){
+    //todo this method will be deleted once all the leaderboard stuff works
+    public static void TESTMETHOD_updateWinnerLoserFile(String player,int playerWin, int playerLoses, int playerAttempts,String opponent, int opponentWins, int opponentLose, int oponentAttempts){
         Leaderboard leaderboard = new Leaderboard();
         leaderboard.savePlayerStatstoFile(player, playerWin, playerLoses,playerAttempts);
         leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLose,oponentAttempts);
@@ -32,8 +30,6 @@ public class Leaderboard {
 
 
     public void savePlayerStatstoFile(String player,int playerWins, int playerLoses, int playerAttempts){
-        //TEST DATTA BELOW- DELETE LATER
-
         String playerwins=Integer.toString(playerWins);
         String playerloses=Integer.toString(playerLoses);
         String playerattempts=Integer.toString(playerAttempts);
