@@ -1,7 +1,3 @@
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -14,19 +10,23 @@ public class Captain {
 
     private static final int bgLength = 5;
     private static Scanner scanner;
-    private static RMIinterface lookUp;
+    private static String playerOneName;
 
-
-    /**
+  /**
      * run the game
      * @param args normal arguments
      */
-    public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
+    public static void main(String[] args) {
+//        lookUp = (RMIinterface) Naming.lookup("//localhost:12959/HelloServer");       //MUST MATCH SERVER
+//        scanner = new Scanner(System.in);
+        String host = "127.0.0.1";
+        int port = 12326;
 
-        lookUp = (RMIinterface) Naming.lookup("//127.0.0.1:1298/HelloServer");       //MUST MATCH SERVER
-        scanner = new Scanner(System.in);
+        try(Socket socket = new Socket(host, port)) {
+            scanner = new Scanner(System.in);
 
-        // basic menu
+
+            // basic menu
         while (true) {
             System.out.println("Welcome to Battleship!");
             System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
@@ -55,15 +55,20 @@ public class Captain {
                 e.printStackTrace();
             }
         }
+    } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
-    public static void soloGameCLI() {
+        public static void soloGameCLI() {
         boolean cont = true;
-            new LoginPortal();
+            //new LoginPortal();
 
             LoginPortal portal = new LoginPortal();
-            String playerOneName = portal.playerNamePopulated();
+            playerOneName = portal.playerNamePopulated();
             int playerWin =0;
             int playerLose =0;
             int opponentWin =0;
@@ -71,7 +76,7 @@ public class Captain {
 
 
 
-        while(cont) {
+        while(playerOneName !=null) {
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
 
@@ -112,21 +117,28 @@ public class Captain {
     /**
      * Controlling method for the solo game against the AI.
      */
-    public static void soloGameGUI() throws RemoteException {
+    public static void soloGameGUI() {
         System.out.print("Player One, enter your name: ");
         String playerOneName = scanner.nextLine();
-        lookUp.soloGameGUI(bgLength, playerOneName);
+
+        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+        BattleshipBoard ai = new BattleshipBoard(bgLength);
+        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, playerOneName);
+
+        //lookUp.soloGameGUI(bgLength, playerOneName);
     }
 
 
     /**
      * Controlling method for the multiplayer game (2 real players)
      */
-    public static void multiplayer() throws RemoteException {
+    public static void multiplayer() {
 
         System.out.println("Enter your name");
         String playerName = scanner.nextLine();
-        lookUp.multiplayerSetup(bgLength, playerName);
+        //lookUp.multiplayerSetup(bgLength, playerName);
+
+
 //        System.out.print("Player One, enter your name: ");
 //        String playerOneName = scanner.nextLine();
 //
@@ -158,9 +170,11 @@ public class Captain {
             System.out.println("Would you like to play again? (Y/N)");
             String choice = scanner.nextLine();
             if (choice.equalsIgnoreCase("y")) {
+                updatePlayerStatus(playerOneName);
                 break;
             }
             else if (choice.equalsIgnoreCase("n")) {
+                exit();
                 return false;
             }
             else{
@@ -168,20 +182,6 @@ public class Captain {
             }
         }
         return true;
-
-//        else if (choice.equalsIgnoreCase("n")) {
-//            //todo 1st - call method to set active plyer to false
-//            updatePlayerStatus();
-//            //todo 2nd - print the leaderboard here
-//
-//
-//
-//            //todo 3rd - exit system
-//            exit();
-//        }
-//        else{
-//            System.out.println("Please enter a Y or N");
-//        }
     }
 
 
@@ -228,9 +228,12 @@ public class Captain {
 
 
 
-    public static void updatePlayerStatus(){
+    public static void updatePlayerStatus(String playerName){
         LoginPortal portal = new LoginPortal();
-        portal.setActivePlayerFlagToFalse();
+        portal.setActivePlayerFlagToFalse(playerName);
+
+
+
         // todo SONJA WORK ON THIS!!!! This will use the file stuff Sonja is doing.
 
     }

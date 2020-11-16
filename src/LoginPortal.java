@@ -17,16 +17,15 @@ public class LoginPortal extends JFrame implements ActionListener{
 
     public static void main(String[] args) {
         new LoginPortal();
+
     }
 
-    LoginPortal (){
+    LoginPortal () {
         username_label = new JLabel();
         username_label.setText("    User Name :");
         username_text = new JTextField();
-        //username_text = new JTextField(Playername);
 
         panel = new JPanel(new GridLayout(2, 1));
-        //panel.add(username_label);
         panel.add(username_label);
         panel.add(username_text);
 
@@ -41,14 +40,10 @@ public class LoginPortal extends JFrame implements ActionListener{
         setSize(400,250);
         setVisible(true);
 
-        //todo there's currently only one player - how do i extend this to have more than one?
-
-        System.out.println("PLAYER NAME POPULATED IS " + username_text.toString());
     }
 
     public String playerNamePopulated() {
-        String playernameToReturn = username_text.toString();
-        System.out.println(playernameToReturn);
+        String playernameToReturn = username_text.getText();
         return playernameToReturn;
 
     }
@@ -58,6 +53,7 @@ public class LoginPortal extends JFrame implements ActionListener{
         String userName = username_text.getText();
         Boolean value = null;
         try {
+            createFile();
             value = checkDetailsAreValid(userName);
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -67,7 +63,18 @@ public class LoginPortal extends JFrame implements ActionListener{
             saveDetailsToFile(userName,true);
         }else{
             message.setText("This user is already active.");
-            }
+            //todo why is the true being saved to the file even if it already exixsts??
+            //setVisible(false);
+        }
+    }
+
+    private void createFile() {
+        try {
+            FileWriter fw = new FileWriter("login-data.txt", true);
+            BufferedWriter bf = new BufferedWriter(fw);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -111,12 +118,10 @@ public class LoginPortal extends JFrame implements ActionListener{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //System.out.println("debug --> here's the map of logins " + loginMap);
     }
 
 
-    private Map<String, Boolean> getHashMapFromFile() throws IOException {
+    private Map<String, Boolean> getHashMapFromFile() {
         String filePath = "login-data.txt";
 
         Map<String, Boolean> mapFileContents = new HashMap<String, Boolean>();
@@ -133,7 +138,6 @@ public class LoginPortal extends JFrame implements ActionListener{
 
                 Boolean activeflag = Boolean.parseBoolean( parts[1].trim() );
                 mapFileContents.put(player_name,activeflag);
-                //System.out.println(player_name+":"+activeflag);
             }
 
         }catch(Exception e){
@@ -148,9 +152,30 @@ public class LoginPortal extends JFrame implements ActionListener{
         return mapFileContents;
     }
 
-    public void setActivePlayerFlagToFalse() {
+    public void setActivePlayerFlagToFalse(String playername) {
+        loginMap = getHashMapFromFile();
+        Map<String, Boolean> newLoginDataMap = new HashMap<String, Boolean>();
 
-        //todo search the map keys using the playername variable and change the value to false
+        try {
+            FileWriter fw = new FileWriter("login-data.txt", true);
+            BufferedWriter bf = new BufferedWriter(fw);
+
+            for(Map.Entry<String, Boolean> entry : loginMap.entrySet()) {
+                if (loginMap.containsKey(playername)) {
+                    newLoginDataMap.put(playername, false);
+                    for (Map.Entry<String, Boolean> newEntry : newLoginDataMap.entrySet()) {
+                        bf.append(newEntry.getKey()).append(":").append(String.valueOf(newEntry.getValue()));
+                        bf.newLine();
+                    }
+                }
+            }
+            bf.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
 
 

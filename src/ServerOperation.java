@@ -1,30 +1,36 @@
+/*
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Scanner;
 
 public class ServerOperation extends UnicastRemoteObject implements RMIinterface {
 
 
-    protected ServerOperation() throws RemoteException {
-        super();
-    }
-
+//    protected ServerOperation() throws RemoteException {
+//        super();
+//    }
 
     public static void main(String[] args) {
-        try{
-            LocateRegistry.createRegistry(1298);
-            Naming.rebind("//127.0.0.1:1298/HelloServer", new ServerOperation());
-            System.out.println("Server running");
-        } catch(Exception e){
-            System.err.println("Server Exception: " + e.toString());
+        String host = "127.0.0.1";
+        int port = 12345;
+
+        try(Socket socket = new Socket(host, port)) {
+            scanner = new Scanner(System.in);
+
+    } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
 
-    // OVERRIDDEN METHODS FROM RMI Interface
+        // OVERRIDDEN METHODS FROM RMI Interface
 
 
     @Override
@@ -55,4 +61,5 @@ public class ServerOperation extends UnicastRemoteObject implements RMIinterface
     public void multiplayerPlay(){
 
     }
-}
+}}
+*/
