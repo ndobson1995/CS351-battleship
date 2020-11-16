@@ -2,55 +2,66 @@ import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Leaderboard {
     Scanner scanner = new Scanner(System.in);
 
-    private Map<String,Integer> leaderboardMap = new HashMap<String,Integer>();
-    private String userName;
-    private int numberOfWins;
-    private int numberOfLoses;
-    private int totalGamesPlayed;
+    private ArrayList<String> nestedLeaderboardMap = new ArrayList<String>();
+    private ArrayList<String> leaderboardMap = new ArrayList<String>();
+
 
     Leaderboard() {
         System.out.println("Here is the leaderboard");
     }
 
     public static void main(String[] args) {
-        //updateWinnerLoserFile("winner",100,"AI", 200);
+        updateWinnerLoserFile("winner",2,3, 1,"AI",3,5,4);
     }
 
 
-    public static void updateWinnerLoserFile(String player,int playerWin, String opponent, int opponentLose){
+    public static void updateWinnerLoserFile(String player,int playerWin, int playerLoses, int playerAttempts,String opponent, int opponentWins, int opponentLose, int oponentAttempts){
         Leaderboard leaderboard = new Leaderboard();
-        //leaderboard.savePlayerStatstoFile(player, playerWin, opponent, opponentLose);
+        leaderboard.savePlayerStatstoFile(player, playerWin, playerLoses,playerAttempts);
+        leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLose,oponentAttempts);
         System.out.println("PLAYER :" + player + " SCORE: "  + playerWin);
-        System.out.println("OPONNENT :" + opponent + " SCORE: "  + opponentLose);
+        System.out.println("OPPONENT :" + opponent + " SCORE: "  + opponentLose);
 
-        //todo this still doesnt take into account the games attempted, no of wins or loses YET
 
     }
 
 
     public void savePlayerStatstoFile(String player,int playerWins, int playerLoses, int playerAttempts){
         //TEST DATTA BELOW- DELETE LATER
-        player="sonja";
 
-        //leaderboardMap.put(player,playerWins);
-        //TODO take in winner loser and append to leadership file
-        //todo sort by values decending order
+        String playerwins=Integer.toString(playerWins);
+        String playerloses=Integer.toString(playerLoses);
+        String playerattempts=Integer.toString(playerAttempts);
+
+
+        nestedLeaderboardMap.add(player);
+        nestedLeaderboardMap.add(playerwins);
+        nestedLeaderboardMap.add(playerloses);
+        nestedLeaderboardMap.add(playerattempts);
+        leaderboardMap.add(String.valueOf(nestedLeaderboardMap));
+        //todo sort by values decending order, but im passing in the values as string - figure this out
 
         try{
             FileWriter fw = new FileWriter("leaderboard-file.txt",true);
             BufferedWriter bf = new BufferedWriter(fw);
-            bf.append("Player name\t\t Player Wins\t\t Player Loses\t\t Player Attempts");
-            for(Map.Entry<String, Integer> entry : leaderboardMap.entrySet()){
-                bf.append(entry.getKey()).append("\t\t").append(String.valueOf(entry.getValue()));
-                bf.newLine();
-            }
+            bf.append("\nPlayer name\t\t Player Wins\t\t Player Loses\t\t Player Attempts\n");
+
+//            for (i = 0; i < leaderboardMap.length(); i++) {
+//                for (j = 0; j < nestedLeaderboardMap.length; j++) {
+//                }
+//
+//                }
+
+
+//            for(Map.Entry<String, Integer> entry : leaderboardMap.entrySet()){
+//                bf.append(entry.getKey()).append("\t\t").append(String.valueOf(entry.getValue()));
+//                bf.newLine();
+//            }
             bf.close();
         } catch(FileNotFoundException e) {
             e.printStackTrace();
@@ -58,24 +69,5 @@ public class Leaderboard {
             e.printStackTrace();
         }
     }
-
-    private void leaderboardFile(){
-
-        //todo: username, score, no of wins, no of loser, total games
-
-
-        //System.out.println("debug --> here's the map of logins " + loginMap);
-    }
-
-//    public static void main(String[] args) {
-//        Map<String, Integer> unsortedMap = new HashMap<String, Integer>();
-//        unsortedMap.put("Jack", 60);
-//        unsortedMap.put("Bob", 40);
-//        unsortedMap.put("Rick", 20);
-//
-////        Map<String, Integer> sortedMap = sortByValue(unsortedMap);
-////        printMap(sortedMap);
-//    }
-
 }
 
