@@ -17,7 +17,6 @@ public class LoginPortal extends JFrame implements ActionListener{
 
     public static void main(String[] args) {
         new LoginPortal();
-
     }
 
     LoginPortal () {
@@ -36,7 +35,7 @@ public class LoginPortal extends JFrame implements ActionListener{
 
         submit.addActionListener(this);
         add(panel, BorderLayout.CENTER);
-        setTitle("LOGIN PORTAL");
+        setTitle("BATTLESHIP LOGIN PORTAL");
         setSize(400,250);
         setVisible(true);
 
@@ -63,8 +62,6 @@ public class LoginPortal extends JFrame implements ActionListener{
             saveDetailsToFile(userName,true);
         }else{
             message.setText("This user is already active.");
-            //todo why is the true being saved to the file even if it already exixsts??
-            //setVisible(false);
         }
     }
 
@@ -78,7 +75,7 @@ public class LoginPortal extends JFrame implements ActionListener{
     }
 
     /**
-     * This method will take in the details and check the file to make sure the player is not currently logged in
+     * This method will take in the details and check the file to make sure the player is not currently logged in.
      */
     private boolean checkDetailsAreValid(String playername) throws IOException {
         loginMap = getHashMapFromFile();
@@ -100,7 +97,7 @@ public class LoginPortal extends JFrame implements ActionListener{
 
 
     /**
-     * This method will save the details to the file
+     * This method will save the details(Player name & Active Player Status to the file
      */
     public void saveDetailsToFile(String playername,boolean activePlayer) {
         loginMap.put(playername, activePlayer);
@@ -152,13 +149,12 @@ public class LoginPortal extends JFrame implements ActionListener{
     }
 
     /**
-     * This method will search the hashmap with login data to find the player name and change the activePlayerFlag
-     * to false after the user had finished playing the game.
+     * This method will be called after the user is finished playing the game and search the hashmap containing
+     * login data to find the player names and change the activePlayerFlag to false.
      */
     public void setActivePlayerFlagToFalse(String playername) {
         loginMap = getHashMapFromFile();
         Map<String, Boolean> newLoginDataMap = new HashMap<String, Boolean>();
-
         try {
             FileWriter fw = new FileWriter("login-data.txt", true);
             BufferedWriter bf = new BufferedWriter(fw);

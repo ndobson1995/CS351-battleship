@@ -65,16 +65,14 @@ public class Captain {
 
         public static void soloGameCLI() {
         boolean cont = true;
-            //new LoginPortal();
-
             LoginPortal portal = new LoginPortal();
             playerOneName = portal.playerNamePopulated();
             int playerWins =0;
             int playerLoses =0;
-            int playerGamesAttempted =0;
+            int playerGamesAttempted;
             int opponentWins =0;
             int opponentLoses =0;
-            int opponentGamesAttempted =0;
+            int opponentGamesAttempted;
 
 
 
@@ -93,10 +91,10 @@ public class Captain {
                     System.out.println(playerOneName + " wins!");
                     displayWinnerLoser(playerOneName, "AI");
                     int win = playerWins++;
-                    int playerAttempts = playerGamesAttempted++;
+                    playerGamesAttempted = playerWins + playerLoses;
                     int lose = opponentLoses++;
-                    int oppAttempts = opponentGamesAttempted++;
-                    updateWinnerLoserFile(playerOneName,win,playerLoses,playerAttempts,"AI", opponentWins, lose,oppAttempts);
+                    opponentGamesAttempted = opponentWins + opponentLoses;
+                    updateWinnerLoserFile(playerOneName,win,playerLoses,playerGamesAttempted,"AI", opponentWins, lose,opponentGamesAttempted);
                     break;
                 }
                 // as above, so below
@@ -107,16 +105,16 @@ public class Captain {
                     System.out.println("Computer wins!");
                     displayWinnerLoser("AI", playerOneName);
                     int win = opponentWins++;
-                    int oppAttempts = opponentGamesAttempted++;
+                    opponentGamesAttempted = opponentWins + opponentLoses;
                     int lose = playerLoses++;
-                    int playerAttempts = playerGamesAttempted++;
-                    updateWinnerLoserFile("AI",win,opponentLoses,oppAttempts,playerOneName,playerWins,lose,playerAttempts);
+                    playerGamesAttempted = playerWins + playerLoses;
+                    updateWinnerLoserFile("AI",win,opponentLoses,opponentGamesAttempted,playerOneName,playerWins,lose,playerGamesAttempted);
                     break;
                 }
             }
             cont = rematch();
         }
-        }
+    }
 
 
 

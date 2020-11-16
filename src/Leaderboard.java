@@ -14,17 +14,19 @@ public class Leaderboard {
     }
 
     public static void main(String[] args) {
-        TESTMETHOD_updateWinnerLoserFile("sonja",2,3, 1,"AI",3,5,4);
+        TESTMETHOD_updateWinnerLoserFile("sonja",6,1, 7,"will",3,5,4);
+        TESTMETHOD_updateWinnerLoserFile("kieran",2,3, 1,"sonja",3,5,4);
+        TESTMETHOD_updateWinnerLoserFile("nicole",4,3, 1,"kieran",3,5,4);
+        TESTMETHOD_updateWinnerLoserFile("will",9,3, 1,"nicole",3,5,4);
     }
 
     //todo this method will be deleted once all the leaderboard stuff works
-    public static void TESTMETHOD_updateWinnerLoserFile(String player,int playerWin, int playerLoses, int playerAttempts,String opponent, int opponentWins, int opponentLose, int oponentAttempts){
+    public static void TESTMETHOD_updateWinnerLoserFile(String player,int playerWin, int playerLoses, int playerAttempts,String opponent, int opponentWins, int opponentLose, int opponentAttempts){
         Leaderboard leaderboard = new Leaderboard();
         leaderboard.savePlayerStatstoFile(player, playerWin, playerLoses,playerAttempts);
-        leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLose,oponentAttempts);
-        System.out.println("PLAYER :" + player + " SCORE: "  + playerWin);
-        System.out.println("OPPONENT :" + opponent + " SCORE: "  + opponentLose);
-
+        leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLose,opponentAttempts);
+        System.out.println("PLAYER: " + player + ". Wins: "  + playerWin + ". Loses: " + playerLoses + ". Attempts: " + playerAttempts);
+        System.out.println("PLAYER2: " + opponent + ". Wins: "  + opponentLose+ ". Loses: " + ". Attempts: " + opponentAttempts);
 
     }
 
@@ -34,12 +36,12 @@ public class Leaderboard {
         String playerloses=Integer.toString(playerLoses);
         String playerattempts=Integer.toString(playerAttempts);
 
-
         nestedLeaderboardMap.add(player);
         nestedLeaderboardMap.add(playerwins);
         nestedLeaderboardMap.add(playerloses);
         nestedLeaderboardMap.add(playerattempts);
         leaderboardMap.add(String.valueOf(nestedLeaderboardMap));
+
         //todo sort by values decending order, but im passing in the values as string - figure this out
 
         try{
@@ -47,17 +49,11 @@ public class Leaderboard {
             BufferedWriter bf = new BufferedWriter(fw);
             bf.append("\nPlayer name\t\t Player Wins\t\t Player Loses\t\t Player Attempts\n");
 
-//            for (i = 0; i < leaderboardMap.length(); i++) {
-//                for (j = 0; j < nestedLeaderboardMap.length; j++) {
-//                }
-//
-//                }
+            for (String data:leaderboardMap){
+                System.out.println("look at all this data in the mappp " +data);
+                bf.append(data+"\n");
+            }
 
-
-//            for(Map.Entry<String, Integer> entry : leaderboardMap.entrySet()){
-//                bf.append(entry.getKey()).append("\t\t").append(String.valueOf(entry.getValue()));
-//                bf.newLine();
-//            }
             bf.close();
         } catch(FileNotFoundException e) {
             e.printStackTrace();
