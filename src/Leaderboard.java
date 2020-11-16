@@ -20,13 +20,13 @@ public class Leaderboard {
     }
 
     public static void main(String[] args) {
-        updateWinnerLoserFile("winner",100,"AI", 200);
+        //updateWinnerLoserFile("winner",100,"AI", 200);
     }
 
 
     public static void updateWinnerLoserFile(String player,int playerWin, String opponent, int opponentLose){
         Leaderboard leaderboard = new Leaderboard();
-        leaderboard.savePlayerStatstoFile(player, playerWin, opponent, opponentLose);
+        //leaderboard.savePlayerStatstoFile(player, playerWin, opponent, opponentLose);
         System.out.println("PLAYER :" + player + " SCORE: "  + playerWin);
         System.out.println("OPONNENT :" + opponent + " SCORE: "  + opponentLose);
 
@@ -34,50 +34,21 @@ public class Leaderboard {
 
     }
 
-//    private static void savePlayerStatstoFile() {
-//        String player="sonja";
-//        int playerScore=100;
-//        String opponent="kieran";
-//        int opponentScore=200;
-//        Map<String,Integer> leaderboardMap = new HashMap<String,Integer>();
-//        leaderboardMap.put(player,playerScore);
-//        leaderboardMap.put(opponent,opponentScore);
-//
-//        try{
-//            FileWriter fw = new FileWriter("leaderboard-file.txt",true);
-//            BufferedWriter bf = new BufferedWriter(fw);
-//
-//            for(Map.Entry<String, Integer> entry : leaderboardMap.entrySet()){
-//                bf.append(entry.getKey()).append(":").append(String.valueOf(entry.getValue()));
-//                bf.newLine();
-//            }
-//            bf.close();
-//        } catch(FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
-
-    public void savePlayerStatstoFile(String player,int playerScore, String opponent, int opponentScore){
+    public void savePlayerStatstoFile(String player,int playerWins, int playerLoses, int playerAttempts){
         //TEST DATTA BELOW- DELETE LATER
         player="sonja";
-        playerScore=100;
-        opponent="kieran";
-        opponentScore=200;
 
-        leaderboardMap.put(player,playerScore);
-        leaderboardMap.put(opponent,opponentScore);
+        //leaderboardMap.put(player,playerWins);
         //TODO take in winner loser and append to leadership file
         //todo sort by values decending order
 
         try{
             FileWriter fw = new FileWriter("leaderboard-file.txt",true);
             BufferedWriter bf = new BufferedWriter(fw);
-
+            bf.append("Player name\t\t Player Wins\t\t Player Loses\t\t Player Attempts");
             for(Map.Entry<String, Integer> entry : leaderboardMap.entrySet()){
-                bf.append(entry.getKey()).append(":").append(String.valueOf(entry.getValue()));
+                bf.append(entry.getKey()).append("\t\t").append(String.valueOf(entry.getValue()));
                 bf.newLine();
             }
             bf.close();

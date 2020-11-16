@@ -120,13 +120,13 @@ public class LoginPortal extends JFrame implements ActionListener{
         }
     }
 
-
+    /**
+     * This method will retrieve all the key,value pairs stored in the login file to compare against
+     */
     private Map<String, Boolean> getHashMapFromFile() {
         String filePath = "login-data.txt";
-
         Map<String, Boolean> mapFileContents = new HashMap<String, Boolean>();
         BufferedReader br = null;
-
         try{
             File file = new File(filePath);
             br = new BufferedReader( new FileReader(file) );
@@ -139,7 +139,6 @@ public class LoginPortal extends JFrame implements ActionListener{
                 Boolean activeflag = Boolean.parseBoolean( parts[1].trim() );
                 mapFileContents.put(player_name,activeflag);
             }
-
         }catch(Exception e){
             e.printStackTrace();
         }finally{
@@ -152,6 +151,10 @@ public class LoginPortal extends JFrame implements ActionListener{
         return mapFileContents;
     }
 
+    /**
+     * This method will search the hashmap with login data to find the player name and change the activePlayerFlag
+     * to false after the user had finished playing the game.
+     */
     public void setActivePlayerFlagToFalse(String playername) {
         loginMap = getHashMapFromFile();
         Map<String, Boolean> newLoginDataMap = new HashMap<String, Boolean>();
@@ -175,9 +178,5 @@ public class LoginPortal extends JFrame implements ActionListener{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
     }
 }

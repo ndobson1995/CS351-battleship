@@ -69,10 +69,12 @@ public class Captain {
 
             LoginPortal portal = new LoginPortal();
             playerOneName = portal.playerNamePopulated();
-            int playerWin =0;
-            int playerLose =0;
-            int opponentWin =0;
-            int opponentLose =0;
+            int playerWins =0;
+            int playerLoses =0;
+            int playerGamesAttempted =0;
+            int opponentWins =0;
+            int opponentLoses =0;
+            int opponentGamesAttempted =0;
 
 
 
@@ -90,9 +92,11 @@ public class Captain {
                 if (ai.getShipsRemaining() == 0) {
                     System.out.println(playerOneName + " wins!");
                     displayWinnerLoser(playerOneName, "AI");
-                    int win = playerWin++;
-                    int lose = opponentLose++;
-                    updateWinnerLoserFile(playerOneName,win,"AI", lose);
+                    int win = playerWins++;
+                    int playerAttempts = playerGamesAttempted++;
+                    int lose = opponentLoses++;
+                    int oppAttempts = opponentGamesAttempted++;
+                    updateWinnerLoserFile(playerOneName,win,playerLoses,playerAttempts,"AI", opponentWins, lose,oppAttempts);
                     break;
                 }
                 // as above, so below
@@ -102,9 +106,11 @@ public class Captain {
                 if (playerOne.getShipsRemaining() == 0) {
                     System.out.println("Computer wins!");
                     displayWinnerLoser("AI", playerOneName);
-                    int win = opponentWin++;
-                    int lose = playerLose++;
-                    updateWinnerLoserFile("AI",win,playerOneName,lose);
+                    int win = opponentWins++;
+                    int oppAttempts = opponentGamesAttempted++;
+                    int lose = playerLoses++;
+                    int playerAttempts = playerGamesAttempted++;
+                    updateWinnerLoserFile("AI",win,opponentLoses,oppAttempts,playerOneName,playerWins,lose,playerAttempts);
                     break;
                 }
             }
@@ -216,11 +222,12 @@ public class Captain {
     }
 
 
-    public static void updateWinnerLoserFile(String player,int playerWin, String opponent, int opponentLose){
+    public static void updateWinnerLoserFile(String player,int playerWins, int playerLoses, int playerGamesAttempted, String opponent, int opponentWins,int opponentLoses,int opponentGamesAttempted){
         Leaderboard leaderboard = new Leaderboard();
-        leaderboard.savePlayerStatstoFile(player, playerWin, opponent, opponentLose);
-        System.out.println("PLAYER :" + player + "SCORE: "  + playerWin);
-        System.out.println("OPONNENT :" + opponent + "SCORE: "  + opponentLose);
+        leaderboard.savePlayerStatstoFile(player, playerWins, playerLoses,playerGamesAttempted);
+        leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLoses,opponentGamesAttempted);
+        System.out.println("PLAYER :" + player + "SCORE: "  + playerWins);
+        System.out.println("OPONNENT : " + opponent + "SCORE: "  + opponentLoses);
 
         //todo this still doesnt take into account the games attempted, no of wins or loses YET
 
@@ -231,10 +238,6 @@ public class Captain {
     public static void updatePlayerStatus(String playerName){
         LoginPortal portal = new LoginPortal();
         portal.setActivePlayerFlagToFalse(playerName);
-
-
-
-        // todo SONJA WORK ON THIS!!!! This will use the file stuff Sonja is doing.
 
     }
 
