@@ -223,7 +223,8 @@ public class Captain {
     public static void updateWinnerLoserFile(String player,int playerWins, int playerLoses, int playerGamesAttempted, String opponent, int opponentWins,int opponentLoses,int opponentGamesAttempted){
         Leaderboard leaderboard = new Leaderboard();
         leaderboard.savePlayerStatstoFile(player, playerWins, playerLoses,playerGamesAttempted);
-        leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLoses,opponentGamesAttempted);
+        //tODO re work this if multiplayer is working - sonja
+        //leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLoses,opponentGamesAttempted);
         System.out.println("PLAYER :" + player + "SCORE: "  + playerWins);
         System.out.println("OPONNENT : " + opponent + "SCORE: "  + opponentLoses);
 
