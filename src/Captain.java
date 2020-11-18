@@ -2,6 +2,9 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 /**
  * Main driver for the program, called Captain because ships
@@ -12,20 +15,28 @@ public class Captain {
     private static final int bgLength = 5;
     private static Scanner scanner;
     private static RMIinterface lookUp;
+    private static String playerOneName;
 
 
     /**
      * run the game
      * @param args normal arguments
      */
-    public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
+    public static void main(String[] args) throws IOException, NotBoundException {
 
         lookUp = (RMIinterface) Naming.lookup("//localhost:11100/HelloServer");       //MUST MATCH SERVER
         scanner = new Scanner(System.in);
 
-        // basic menu
-        System.out.println("Welcome to Battleship!");
+        String host = "127.0.0.1";
+        int port = 12326;
+
+        try(Socket socket = new Socket(host, port)) {
+            scanner = new Scanner(System.in);
+
+
+            // basic menu
         while (true) {
+            System.out.println("Welcome to Battleship!");
             System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
             int choice;
 
@@ -50,14 +61,23 @@ public class Captain {
                 }
         }
     }
+    }
 
 
-    public static void soloGameCLI() {
+        public static void soloGameCLI() {
         boolean cont = true;
-        System.out.print("Player One, enter your name: ");
-        String playerOneName = scanner.nextLine();
+            LoginPortal portal = new LoginPortal();
+            playerOneName = portal.playerNamePopulated();
+            int playerWins =0;
+            int playerLoses =0;
+            int playerGamesAttempted;
+            int opponentWins =0;
+            int opponentLoses =0;
+            int opponentGamesAttempted;
 
-        while(cont) {
+
+    //todo dont progress game untill login is done
+        while(playerOneName !=null) {
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
 
@@ -70,7 +90,12 @@ public class Captain {
                 // check to see if the enemies ships are all gone
                 if (ai.getShipsRemaining() == 0) {
                     System.out.println(playerOneName + " wins!");
-                    updatePlayer(playerOneName, "AI");
+                    displayWinnerLoser(playerOneName, "AI");
+                    int win = playerWins++;
+                    playerGamesAttempted = playerWins + playerLoses;
+                    int lose = opponentLoses++;
+                    opponentGamesAttempted = opponentWins + opponentLoses;
+                    updateWinnerLoserFile(playerOneName,win,playerLoses,playerGamesAttempted,"AI", opponentWins, lose,opponentGamesAttempted);
                     break;
                 }
                 // as above, so below
@@ -79,7 +104,12 @@ public class Captain {
                 }
                 if (playerOne.getShipsRemaining() == 0) {
                     System.out.println("Computer wins!");
-                    updatePlayer("AI", playerOneName);
+                    displayWinnerLoser("AI", playerOneName);
+                    int win = opponentWins++;
+                    opponentGamesAttempted = opponentWins + opponentLoses;
+                    int lose = playerLoses++;
+                    playerGamesAttempted = playerWins + playerLoses;
+                    updateWinnerLoserFile("AI",win,opponentLoses,opponentGamesAttempted,playerOneName,playerWins,lose,playerGamesAttempted);
                     break;
                 }
             }
@@ -88,12 +118,17 @@ public class Captain {
     }
 
 
+
     /**
      * Controlling method for the solo game against the AI.
      */
     public static void soloGameGUI() throws RemoteException {
         System.out.print("Player One, enter your name: ");
         String playerOneName = scanner.nextLine();
+//        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+//        BattleshipBoard ai = new BattleshipBoard(bgLength);
+//        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, playerOneName);
+
         lookUp.soloGameGUI(bgLength, playerOneName);
     }
 
@@ -137,9 +172,12 @@ public class Captain {
             System.out.println("Would you like to play again? (Y/N)");
             String choice = scanner.nextLine();
             if (choice.equalsIgnoreCase("y")) {
+
                 break;
             }
             else if (choice.equalsIgnoreCase("n")) {
+                updatePlayerStatus(playerOneName);
+                exit();
                 return false;
             }
             else{
@@ -166,20 +204,41 @@ public class Captain {
         }
         if(opponentBoard.getShipsRemaining() == 0){
             System.out.println(player + " wins!");
-            updatePlayer(player, opponent);
+            displayWinnerLoser(player, opponent);
+            //updateWinnerLoserFile(player,playerScore, opponent, opponentScore);
             return true;
         }
         return false;
     }
 
 
-    /**
-     * @param winner player who won - file updated with win + games attempted
-     * @param loser player who lost - file updated with games attempted
-     */
-    public static void updatePlayer(String winner, String loser){
+    public static void displayWinnerLoser(String winner, String loser){
+        System.out.println("The winner is " + winner);
+        System.out.println("The loser is " + loser);
+    }
 
-        // This will use the file stuff Sonja is doing.
 
+    public static void updateWinnerLoserFile(String player,int playerWins, int playerLoses, int playerGamesAttempted, String opponent, int opponentWins,int opponentLoses,int opponentGamesAttempted){
+        Leaderboard leaderboard = new Leaderboard();
+        leaderboard.savePlayerStatstoFile(player, playerWins, playerLoses,playerGamesAttempted);
+        //tODO re work this if multiplayer is working - sonja
+        //leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLoses,opponentGamesAttempted);
+        System.out.println("PLAYER :" + player + "SCORE: "  + playerWins);
+        System.out.println("OPONNENT : " + opponent + "SCORE: "  + opponentLoses);
+
+
+    }
+
+
+
+    public static void updatePlayerStatus(String playerName){
+        LoginPortal portal = new LoginPortal();
+        portal.setActivePlayerFlagToFalse(playerName);
+
+    }
+
+    private static void exit() {
+        System.out.println("Goodbye. Come back soon!");
+        System.exit(0);
     }
 }
