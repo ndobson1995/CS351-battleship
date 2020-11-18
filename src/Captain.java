@@ -1,3 +1,7 @@
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -10,28 +14,32 @@ public class Captain {
 
     private static final int bgLength = 5;
     private static Scanner scanner;
+    private static RMIinterface lookUp;
     private static String playerOneName;
 
-  /**
+
+    /**
      * run the game
      * @param args normal arguments
      */
-    public static void main(String[] args) {
-//        lookUp = (RMIinterface) Naming.lookup("//localhost:12959/HelloServer");       //MUST MATCH SERVER
-//        scanner = new Scanner(System.in);
-        String host = "127.0.0.1";
-        int port = 12326;
+    public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
 
-        try(Socket socket = new Socket(host, port)) {
-            scanner = new Scanner(System.in);
+        lookUp = (RMIinterface) Naming.lookup("//localhost:11100/HelloServer");       //MUST MATCH SERVER
+        scanner = new Scanner(System.in);
 
+//        String host = "127.0.0.1";
+//        int port = 12326;
+//
+//        try(Socket socket = new Socket(host, port)) {
+//            scanner = new Scanner(System.in);
+//
 
             // basic menu
         while (true) {
             System.out.println("Welcome to Battleship!");
             System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
             int choice;
-            try {
+
                 String choiceStr = scanner.nextLine();
                 // confirm a number was entered.
                 if (choiceStr.matches("[0-9][0-9]*")) {
@@ -51,14 +59,6 @@ public class Captain {
                 } else {
                     System.out.println("Please enter a number");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -75,7 +75,7 @@ public class Captain {
             int opponentGamesAttempted;
 
 
-
+    //todo dont progress game untill login is done
         while(playerOneName !=null) {
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
@@ -124,12 +124,11 @@ public class Captain {
     public static void soloGameGUI() {
         System.out.print("Player One, enter your name: ");
         String playerOneName = scanner.nextLine();
+//        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+//        BattleshipBoard ai = new BattleshipBoard(bgLength);
+//        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, playerOneName);
 
-        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-        BattleshipBoard ai = new BattleshipBoard(bgLength);
-        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, playerOneName);
-
-        //lookUp.soloGameGUI(bgLength, playerOneName);
+        lookUp.soloGameGUI(bgLength, playerOneName);
     }
 
 
@@ -140,9 +139,7 @@ public class Captain {
 
         System.out.println("Enter your name");
         String playerName = scanner.nextLine();
-        //lookUp.multiplayerSetup(bgLength, playerName);
-
-
+        lookUp.multiplayerSetup(bgLength, playerName);
 //        System.out.print("Player One, enter your name: ");
 //        String playerOneName = scanner.nextLine();
 //
