@@ -22,17 +22,17 @@ public class Captain {
      * run the game
      * @param args normal arguments
      */
-    public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
+    public static void main(String[] args) throws IOException, NotBoundException {
 
         lookUp = (RMIinterface) Naming.lookup("//localhost:11100/HelloServer");       //MUST MATCH SERVER
         scanner = new Scanner(System.in);
 
-//        String host = "127.0.0.1";
-//        int port = 12326;
-//
-//        try(Socket socket = new Socket(host, port)) {
-//            scanner = new Scanner(System.in);
-//
+        String host = "127.0.0.1";
+        int port = 12326;
+
+        try(Socket socket = new Socket(host, port)) {
+            scanner = new Scanner(System.in);
+
 
             // basic menu
         while (true) {
@@ -60,6 +60,7 @@ public class Captain {
                     System.out.println("Please enter a number");
                 }
         }
+    }
     }
 
 
@@ -121,7 +122,7 @@ public class Captain {
     /**
      * Controlling method for the solo game against the AI.
      */
-    public static void soloGameGUI() {
+    public static void soloGameGUI() throws RemoteException {
         System.out.print("Player One, enter your name: ");
         String playerOneName = scanner.nextLine();
 //        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
@@ -135,7 +136,7 @@ public class Captain {
     /**
      * Controlling method for the multiplayer game (2 real players)
      */
-    public static void multiplayer() {
+    public static void multiplayer() throws RemoteException {
 
         System.out.println("Enter your name");
         String playerName = scanner.nextLine();
@@ -171,10 +172,11 @@ public class Captain {
             System.out.println("Would you like to play again? (Y/N)");
             String choice = scanner.nextLine();
             if (choice.equalsIgnoreCase("y")) {
-                updatePlayerStatus(playerOneName);
+
                 break;
             }
             else if (choice.equalsIgnoreCase("n")) {
+                updatePlayerStatus(playerOneName);
                 exit();
                 return false;
             }
@@ -202,7 +204,6 @@ public class Captain {
         }
         if(opponentBoard.getShipsRemaining() == 0){
             System.out.println(player + " wins!");
-            //todo sonja FIND WHERE THE SCORES ARE SAVED
             displayWinnerLoser(player, opponent);
             //updateWinnerLoserFile(player,playerScore, opponent, opponentScore);
             return true;
@@ -225,7 +226,6 @@ public class Captain {
         System.out.println("PLAYER :" + player + "SCORE: "  + playerWins);
         System.out.println("OPONNENT : " + opponent + "SCORE: "  + opponentLoses);
 
-        //todo this still doesnt take into account the games attempted, no of wins or loses YET
 
     }
 
