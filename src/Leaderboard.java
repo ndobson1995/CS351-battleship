@@ -10,7 +10,7 @@ public class Leaderboard {
 
 
     Leaderboard() {
-        System.out.println("Here is the leaderboard");
+        System.out.println();
     }
 
     public static void main(String[] args) {
@@ -25,7 +25,7 @@ public class Leaderboard {
         Leaderboard leaderboard = new Leaderboard();
         leaderboard.savePlayerStatstoFile(player, playerWin, playerLoses,playerAttempts);
         //leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLose,opponentAttempts);
-        System.out.println("PLAYER: " + player + ". Wins: "  + playerWin + ". Loses: " + playerLoses + ". Attempts: " + playerAttempts);
+        System.out.println("\nPLAYER: " + player + ".\n Wins: "  + playerWin + ".\n Loses: " + playerLoses + ".\n Attempts: " + playerAttempts);
         //System.out.println("PLAYER2: " + opponent + ". Wins: "  + opponentLose+ ". Loses: " + ". Attempts: " + opponentAttempts);
 
     }
@@ -47,12 +47,10 @@ public class Leaderboard {
         try{
             FileWriter fw = new FileWriter("leaderboard-file.txt",true);
             BufferedWriter bf = new BufferedWriter(fw);
-            bf.append("\nPlayer name\t\t Player Wins\t Player Loses\t Player Attempts\n");
+            bf.append("\nPlayer name\t\t Player Wins\t\t Player Loses\t\t Player Attempts\n");
 
-            //for (String data:leaderboardMap){
             for (String data:nestedLeaderboardMap){
-                System.out.println("look at all this data in the mappp " +data);
-                bf.append(data+"\t\t\t\t");
+                bf.append(data+"\t\t\t\t\t");
             }
 
             bf.close();

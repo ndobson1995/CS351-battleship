@@ -52,6 +52,7 @@ public class LoginPortal extends JFrame implements ActionListener{
         String userName = username_text.getText();
         Boolean value = null;
         try {
+            setActivePlayerFlagToFalse("sonja");
             createFile();
             value = checkDetailsAreValid(userName);
         } catch (IOException e1) {

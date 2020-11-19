@@ -34,7 +34,7 @@ public class Captain {
             scanner = new Scanner(System.in);
 
 
-            // basic menu
+        // basic menu
         while (true) {
             System.out.println("Welcome to Battleship!");
             System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
