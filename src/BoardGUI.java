@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JFrame;
 
 
 public class BoardGUI extends JFrame {
@@ -130,7 +129,7 @@ public class BoardGUI extends JFrame {
                 int finalK = k;
                 button.addActionListener(actionEvent -> {
 
-                    if (button.getBackground() == Color.RED || button.getBackground() == Color.GREEN) {
+                    if (button.getBackground() == Color.RED || button.getBackground() == Color.GREEN){
                         JOptionPane.showMessageDialog(main, "Already fired here, please try again!");
                     } else {
                         if (button.getText().equals("o")) {
@@ -139,7 +138,7 @@ public class BoardGUI extends JFrame {
                             String[][] hitThis = opponentBattleshipBoard.getBoard();
                             button.setBackground(Color.RED);
                             hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
-                            if (hitCount == 5) {
+                            if(hitCount == 5){
                                 JOptionPane.showMessageDialog(main, "You win!");
 
                                 main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
@@ -148,12 +147,7 @@ public class BoardGUI extends JFrame {
                             }
                             controlAIFiring();
 
-
-                            // here we need to return or do something to the players score
-
-                                controlAIFiring();
-                            }
-                         else if (button.getText().equals("~")) {
+                        } else if (button.getText().equals("~")) {
                             button.setBackground(Color.GREEN);
                             String[][] hitThis = opponentBattleshipBoard.getBoard();
                             aiHitCount = aiHitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
@@ -170,9 +164,10 @@ public class BoardGUI extends JFrame {
             i++;
         }
         board.setBorder(BorderFactory.createTitledBorder("Firing Range"));
-        setSize(400,400);
+        setSize(400, 400);
         return board;
     }
+
 
     /**
      * control the AI firing and confirm the AI has/hasn't won

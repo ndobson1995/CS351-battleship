@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+
 /**
  * Main board building and interaction logic
  */
@@ -80,6 +81,7 @@ public class BattleshipBoard {
             iter2++;
         }
         System.out.println();
+
         for (int i = 0; i < bgLength; i++) {
             System.out.print(i + ": |");
             for (int j = 0; j < bgLength; j++) {
