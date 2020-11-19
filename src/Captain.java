@@ -1,53 +1,48 @@
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.rmi.NotBoundException;
 import java.util.Scanner;
+
 /**
  * Main driver for the program, called Captain because ships
  */
 
 public class Captain {
 
-    private static final int bgLength = 5;
+    private static final int bgLength = 3;
     private static Scanner scanner;
-    private static RMIinterface lookUp;
-    private static String playerOneName;
 
 
     /**
      * run the game
+     *
      * @param args normal arguments
      */
     public static void main(String[] args) throws IOException, NotBoundException {
 
-        lookUp = (RMIinterface) Naming.lookup("//localhost:11100/HelloServer");       //MUST MATCH SERVER
+        //DataInputStream in = new DataInputStream(socket.getInputStream());
+        //MUST MATCH SERVER
         scanner = new Scanner(System.in);
+        System.out.println("Welcome to Battleship!");
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine();
 
-        String host = "127.0.0.1";
-        int port = 12326;
-
-        try(Socket socket = new Socket(host, port)) {
-            scanner = new Scanner(System.in);
-
-
-            // basic menu
         while (true) {
-            System.out.println("Welcome to Battleship!");
+
             System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
             int choice;
-
+            try {
                 String choiceStr = scanner.nextLine();
                 // confirm a number was entered.
                 if (choiceStr.matches("[0-9][0-9]*")) {
                     choice = Integer.parseInt(choiceStr);
                     if (choice == 1) {
-                        soloGameCLI();
+                        soloGameCLI(name);
                     } else if (choice == 2) {
-                        soloGameGUI();
+                        soloGameGUI(name);
                     } else if (choice == 3) {
                         multiplayer();
                     } else if (choice == 0) {
@@ -59,29 +54,21 @@ public class Captain {
                 } else {
                     System.out.println("Please enter a number");
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-    }
 
 
-        public static void soloGameCLI() {
+    public static void soloGameCLI (String name) {
         boolean cont = true;
-            LoginPortal portal = new LoginPortal();
-            playerOneName = portal.playerNamePopulated();
-            int playerWins =0;
-            int playerLoses =0;
-            int playerGamesAttempted;
-            int opponentWins =0;
-            int opponentLoses =0;
-            int opponentGamesAttempted;
 
-
-    //todo dont progress game untill login is done
-        while(playerOneName !=null) {
+        while (cont) {
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
 
-            while(true){
+            while (true) {
                 playerOne.printBoard();
                 // fire and pass in your opponents board to confirm if hit worked
                 if (playerOne.playerFire(ai.getBoard())) {
@@ -89,13 +76,8 @@ public class Captain {
                 }
                 // check to see if the enemies ships are all gone
                 if (ai.getShipsRemaining() == 0) {
-                    System.out.println(playerOneName + " wins!");
-                    displayWinnerLoser(playerOneName, "AI");
-                    int win = playerWins++;
-                    playerGamesAttempted = playerWins + playerLoses;
-                    int lose = opponentLoses++;
-                    opponentGamesAttempted = opponentWins + opponentLoses;
-                    updateWinnerLoserFile(playerOneName,win,playerLoses,playerGamesAttempted,"AI", opponentWins, lose,opponentGamesAttempted);
+                    System.out.println(name + " wins!");
+                    updatePlayer(name, "AI");
                     break;
                 }
                 // as above, so below
@@ -104,12 +86,7 @@ public class Captain {
                 }
                 if (playerOne.getShipsRemaining() == 0) {
                     System.out.println("Computer wins!");
-                    displayWinnerLoser("AI", playerOneName);
-                    int win = opponentWins++;
-                    opponentGamesAttempted = opponentWins + opponentLoses;
-                    int lose = playerLoses++;
-                    playerGamesAttempted = playerWins + playerLoses;
-                    updateWinnerLoserFile("AI",win,opponentLoses,opponentGamesAttempted,playerOneName,playerWins,lose,playerGamesAttempted);
+                    updatePlayer("AI", name);
                     break;
                 }
             }
@@ -118,38 +95,37 @@ public class Captain {
     }
 
 
-
     /**
      * Controlling method for the solo game against the AI.
      */
-    public static void soloGameGUI() throws RemoteException {
-        System.out.print("Player One, enter your name: ");
-        String playerOneName = scanner.nextLine();
-//        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-//        BattleshipBoard ai = new BattleshipBoard(bgLength);
-//        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, playerOneName);
-
-        lookUp.soloGameGUI(bgLength, playerOneName);
+    public static void soloGameGUI(String name) {
+        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+        BattleshipBoard ai = new BattleshipBoard(bgLength);
+        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, name);
     }
 
 
     /**
      * Controlling method for the multiplayer game (2 real players)
      */
-    public static void multiplayer() throws RemoteException {
+    public static void multiplayer () throws IOException {
+        Socket socket = new Socket("localhost", 12346);
+        Thread game = new Thread();
+        game.start();
 
-        System.out.println("Enter your name");
-        String playerName = scanner.nextLine();
-        lookUp.multiplayerSetup(bgLength, playerName);
-//        System.out.print("Player One, enter your name: ");
-//        String playerOneName = scanner.nextLine();
-//
-//        // here is where we'd put the file checking for player one
-//
-//        System.out.print("Player Two, enter your name: ");
-//        String playerTwoName = scanner.nextLine();
-//
-//        // and here is for player two.
+
+        InputStream in = socket.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        System.out.println(reader.readLine());
+
+
+
+
+
+
+        // here is where we'd put the file checking for player one
+
+        // and here is for player two.
 //        boolean cont = true;
 //        while(cont) {
 //            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
@@ -167,20 +143,15 @@ public class Captain {
 //        }
     }
 
-    private static boolean rematch() {
-        while(true) {
+    private static boolean rematch () {
+        while (true) {
             System.out.println("Would you like to play again? (Y/N)");
             String choice = scanner.nextLine();
             if (choice.equalsIgnoreCase("y")) {
-
                 break;
-            }
-            else if (choice.equalsIgnoreCase("n")) {
-                updatePlayerStatus(playerOneName);
-                exit();
+            } else if (choice.equalsIgnoreCase("n")) {
                 return false;
-            }
-            else{
+            } else {
                 System.out.println("Please enter a Y or N");
             }
         }
@@ -188,57 +159,37 @@ public class Captain {
     }
 
 
+//        /**
+//         * FIRE
+//         * @param player player firing
+//         * @param opponent player being fired at
+//         * @param playerBoard player firings board
+//         * @param opponentBoard player being fired ats board
+//         * @return boolean if it hit or not
+//         */
+//        private static boolean fire (String player, String opponent, BattleshipBoard playerBoard, BattleshipBoard
+//        opponentBoard){
+//            System.out.println(opponent + " fire");
+//
+//            if (playerBoard.playerFire(opponentBoard.getBoard())) {
+//                opponentBoard.shipSunk();
+//            }
+//            if (opponentBoard.getShipsRemaining() == 0) {
+//                System.out.println(player + " wins!");
+//                updatePlayer(player, opponent);
+//                return true;
+//            }
+//            return false;
+//        }
+
+
     /**
-     * FIRE
-     * @param player player firing
-     * @param opponent player being fired at
-     * @param playerBoard player firings board
-     * @param opponentBoard player being fired ats board
-     * @return boolean if it hit or not
+     * @param winner player who won - file updated with win + games attempted
+     * @param loser player who lost - file updated with games attempted
      */
-    private static boolean fire(String player, String opponent, BattleshipBoard playerBoard, BattleshipBoard opponentBoard) {
-        System.out.println(opponent + " fire");
+    public static void updatePlayer (String winner, String loser){
 
-        if(playerBoard.playerFire(opponentBoard.getBoard())){
-            opponentBoard.shipSunk();
-        }
-        if(opponentBoard.getShipsRemaining() == 0){
-            System.out.println(player + " wins!");
-            displayWinnerLoser(player, opponent);
-            //updateWinnerLoserFile(player,playerScore, opponent, opponentScore);
-            return true;
-        }
-        return false;
-    }
-
-
-    public static void displayWinnerLoser(String winner, String loser){
-        System.out.println("The winner is " + winner);
-        System.out.println("The loser is " + loser);
-    }
-
-
-    public static void updateWinnerLoserFile(String player,int playerWins, int playerLoses, int playerGamesAttempted, String opponent, int opponentWins,int opponentLoses,int opponentGamesAttempted){
-        Leaderboard leaderboard = new Leaderboard();
-        leaderboard.savePlayerStatstoFile(player, playerWins, playerLoses,playerGamesAttempted);
-        //tODO re work this if multiplayer is working - sonja
-        //leaderboard.savePlayerStatstoFile(opponent, opponentWins, opponentLoses,opponentGamesAttempted);
-        System.out.println("PLAYER :" + player + "SCORE: "  + playerWins);
-        System.out.println("OPONNENT : " + opponent + "SCORE: "  + opponentLoses);
-
-
-    }
-
-
-
-    public static void updatePlayerStatus(String playerName){
-        LoginPortal portal = new LoginPortal();
-        portal.setActivePlayerFlagToFalse(playerName);
-
-    }
-
-    private static void exit() {
-        System.out.println("Goodbye. Come back soon!");
-        System.exit(0);
+        HashmapLeaderboard.write(winner, 1, 0);
+        HashmapLeaderboard.write(loser, 0, 1);
     }
 }
