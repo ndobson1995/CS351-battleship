@@ -144,8 +144,7 @@ public class HashmapLeaderboard {
     }
 
 
-    public static void read(){
-        Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
-        System.out.println(leaderboard);
+    public static Map<String, ArrayList<Integer>> read(){
+        return readLeaderboard();
     }
 }

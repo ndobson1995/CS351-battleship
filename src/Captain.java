@@ -66,11 +66,6 @@ public class Captain {
     }
 
 
-    private static void viewLeaderboard() {
-        HashmapLeaderboard.read();
-    }
-
-
     public static void soloGameCLI(String name) {
         BattleshipBoard playerOne = new BattleshipBoard(bgLength);
         BattleshipBoard ai = new BattleshipBoard(bgLength);
@@ -194,4 +189,11 @@ public class Captain {
         HashmapLeaderboard.write(winner, 1, 0);
         HashmapLeaderboard.write(loser, 0, 1);
     }
+
+
+    private static void viewLeaderboard() {
+        System.out.println(HashmapLeaderboard.read());
+        System.out.println();
+    }
+
 }
