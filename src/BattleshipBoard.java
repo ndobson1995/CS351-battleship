@@ -17,7 +17,7 @@ public class BattleshipBoard {
     /**
      * Board constructor, create a board for the player and fill it, and build a "blank" board to fire on.
      */
-    public BattleshipBoard(int bgLength){
+    public BattleshipBoard(int bgLength) {
         this.bgLength = bgLength;
         player = new String[bgLength][bgLength];
         opponent = new String[bgLength][bgLength];
@@ -33,7 +33,7 @@ public class BattleshipBoard {
         }
 
         // number of ships the user wants to play with. Capped at 5.
-        for(int i = 0; i < ships; i++) {
+        for (int i = 0; i < ships; i++) {
             addShip();
         }
     }
@@ -49,11 +49,12 @@ public class BattleshipBoard {
 
     /**
      * checks if a position is free.    - is free, * is occupied
+     *
      * @param x row
      * @param y column
      * @return boolean saying if position free (true) or occupied (false)
      */
-    public boolean shipAllowed(int x, int y){
+    public boolean shipAllowed(int x, int y) {
         return this.player[x][y].equals("~");
     }
 
@@ -71,12 +72,13 @@ public class BattleshipBoard {
 
     /**
      * prints the boards given
+     *
      * @param board either the player or the opponents board
      */
     private void printBoards(String[][] board) {
         int iter2 = 0;
         System.out.print("   |");
-        while(iter2 != bgLength){
+        while (iter2 != bgLength) {
             System.out.print(iter2 + "|");
             iter2++;
         }
@@ -96,7 +98,7 @@ public class BattleshipBoard {
     /**
      * This method randomly adds ships to the board, after confirming a position is free of other ships
      */
-    public void addShip(){
+    public void addShip() {
         Random rand = new Random();
         // bound the random number to the length of the board
         int xCoordinate = rand.nextInt(bgLength);
@@ -108,7 +110,7 @@ public class BattleshipBoard {
         }
         // if it's false though, there's already a ship there so try again.
         // Yes, I know, this is recursive. But not looped so it won't ever run away.
-        else{
+        else {
             addShip();
         }
     }
@@ -116,39 +118,46 @@ public class BattleshipBoard {
 
     /**
      * This passes back your board so the opponents instance can check for a hit.
+     *
      * @return your board to the other player
      */
-    public String[][] getBoard(){
+    public String[][] getBoard() {
         return player;
     }
 
 
     /**
      * Actually fire at a position. If you hit it will return true, miss false.
+     *
      * @param opponentBoard opponents board passed in to confirm hit
      * @return boolean to say if you hit or not
      */
-    public boolean playerFire(String[][] opponentBoard){
-        while(true) {
-            int X = -1, Y = -1;
+    public boolean playerFire(String[][] opponentBoard) {
+        if (Captain.multiplayer) {
+            return false;
+            //multiplayerHitOrMiss();
+        } else {
+            while (true) {
+                int X = -1, Y = -1;
 
-            // have the user enter coordinates for X (left-right)
-            while (X < 0 || X >= bgLength) {
-                System.out.print("Enter X coordinate: ");
-                X = getCoord(X);
-            }
+                // have the user enter coordinates for X (left-right)
+                while (X < 0 || X >= bgLength) {
+                    System.out.print("Enter X coordinate: ");
+                    X = getCoord(X);
+                }
 
-            // have the user enter coordinates for Y (up-down)
-            while (Y < 0 || Y >= bgLength) {
-                System.out.print("Enter Y coordinate: ");
-                Y = getCoord(Y);
-            }
-            System.out.println();
-            if (opponentBoard[Y][X].equals("*") ||
-                    opponentBoard[Y][X].equals("X")) {
-                System.out.println("Already fired here, try again.");
-            } else {
-                return hitOrMiss(opponentBoard, X, Y, "You");
+                // have the user enter coordinates for Y (up-down)
+                while (Y < 0 || Y >= bgLength) {
+                    System.out.print("Enter Y coordinate: ");
+                    Y = getCoord(Y);
+                }
+                System.out.println();
+                if (opponentBoard[Y][X].equals("*") ||
+                        opponentBoard[Y][X].equals("X")) {
+                    System.out.println("Already fired here, try again.");
+                } else {
+                    return hitOrMiss(opponentBoard, X, Y);
+                }
             }
         }
     }
@@ -156,6 +165,7 @@ public class BattleshipBoard {
 
     /**
      * Method to validate number was entered for coordinate
+     *
      * @param coordinate number to be checked if it's a number and not a letter
      * @return the number
      */
@@ -166,8 +176,7 @@ public class BattleshipBoard {
             String str = scanner.nextLine();
             if (str.matches("[0-9][0-9]*")) {
                 coordinate = Integer.parseInt(str);
-            }
-            else{
+            } else {
                 System.out.println("Please enter a number.");
             }
         } catch (Exception e) {
@@ -179,19 +188,20 @@ public class BattleshipBoard {
 
     /**
      * Method to control the "AI" firing mechanism.
+     *
      * @param opponentBoard the board of the person the AI is playing against
      * @return boolean signifying hit (true) or miss (false)
      */
-    public boolean aiFire(String[][] opponentBoard){
+    public boolean aiFire(String[][] opponentBoard) {
         Random rand = new Random();
-        while(true) {
+        while (true) {
             int xCoordinate = rand.nextInt(bgLength);
             int yCoordinate = rand.nextInt(bgLength);
             // after coordinates retrieved, fire at the board.
             // first, does it hit?
             if (!opponentBoard[yCoordinate][xCoordinate].equals("*") &&
                     !opponentBoard[yCoordinate][xCoordinate].equals("X")) {
-                return hitOrMiss(opponentBoard, xCoordinate, yCoordinate, "AI");
+                return hitOrMiss(opponentBoard, xCoordinate, yCoordinate);
             }
         }
     }
@@ -199,21 +209,22 @@ public class BattleshipBoard {
 
     /**
      * method that determines if you/the AI hit or miss.
+     *
      * @param opponentBoard board of the opponent of whoever is firing
-     * @param xCoordinate X coordinate passed in by player/AI
-     * @param yCoordinate Y coordinate passed in by player/AI
+     * @param xCoordinate   X coordinate passed in by player/AI
+     * @param yCoordinate   Y coordinate passed in by player/AI
      * @return true if hit, false if fail.
      */
-    private boolean hitOrMiss(String[][] opponentBoard, int xCoordinate, int yCoordinate, String who) {
+    private boolean hitOrMiss(String[][] opponentBoard, int xCoordinate, int yCoordinate) {
         if (opponentBoard[yCoordinate][xCoordinate].equals("o")) {
-            System.out.println(who + ": SHIP SUNK");
+            System.out.println("SHIP SUNK");
             opponentBoard[yCoordinate][xCoordinate] = "X";
             opponent[yCoordinate][xCoordinate] = "X";
             return true;    // return confirmation
         }
         // or miss?
         else {
-            System.out.println(who + ": MISSED");
+            System.out.println("MISSED");
             opponentBoard[yCoordinate][xCoordinate] = "*";
             opponent[yCoordinate][xCoordinate] = "*";
             return false;   // return failure
@@ -224,34 +235,34 @@ public class BattleshipBoard {
     /**
      * YOU SUNK MY BATTLESHIP - decrement the number of ships the player has
      */
-    public void shipSunk(){
+    public void shipSunk() {
         --ships;
     }
 
 
     /**
      * Check how many ships are left, without decrementing it
+     *
      * @return number of ships remaining currently
      */
-    public int getShipsRemaining(){
+    public int getShipsRemaining() {
         return ships;
     }
 
 
     /**
      * Logic controlling the firing using the GUI
-     * @param opponentBoard boardarray of firing players opponent
-     * @param yCoord y coord
-     * @param xCoord x coord
-     * @param playerIdentity who fired
+     *
+     * @param opponentBoard  boardarray of firing players opponent
+     * @param yCoord         y coord
+     * @param xCoord         x coord
      * @return the
      */
-    public int guiFire(String[][] opponentBoard, int yCoord, int xCoord, String playerIdentity){
-        boolean hit = hitOrMiss(opponentBoard, xCoord, yCoord, playerIdentity);
-        if(hit){
+    public int guiFire(String[][] opponentBoard, int yCoord, int xCoord) {
+        boolean hit = hitOrMiss(opponentBoard, xCoord, yCoord);
+        if (hit) {
             return 1;
-        }
-        else {
+        } else {
             return 0;
         }
     }

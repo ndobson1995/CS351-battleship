@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.util.Scanner;
 
@@ -14,6 +15,7 @@ public class Captain {
 
     private static final int bgLength = 3;
     private static Scanner scanner;
+    private static RMIinterface game;
 
 
     /**
@@ -25,6 +27,7 @@ public class Captain {
 
         //DataInputStream in = new DataInputStream(socket.getInputStream());
         //MUST MATCH SERVER
+        game = (RMIinterface) Naming.lookup("//localhost:11100/Battleship");
         scanner = new Scanner(System.in);
         System.out.println("Welcome to Battleship!");
         System.out.print("Enter your name: ");
@@ -44,7 +47,9 @@ public class Captain {
                     } else if (choice == 2) {
                         soloGameGUI(name);
                     } else if (choice == 3) {
-                        multiplayer();
+                        multiplayer(name);
+                    } else if (choice == 4) {
+                        viewLeaderboard();
                     } else if (choice == 0) {
                         System.out.println("Thanks for playing!");
                         System.exit(0);
@@ -61,37 +66,45 @@ public class Captain {
     }
 
 
-    public static void soloGameCLI (String name) {
-        boolean cont = true;
+    private static void viewLeaderboard() {
+        HashmapLeaderboard.read();
+    }
 
-        //while (cont) {
-            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-            BattleshipBoard ai = new BattleshipBoard(bgLength);
 
-            while (true) {
-                playerOne.printBoard();
-                // fire and pass in your opponents board to confirm if hit worked
-                if (playerOne.playerFire(ai.getBoard())) {
-                    ai.shipSunk();
-                }
-                // check to see if the enemies ships are all gone
-                if (ai.getShipsRemaining() == 0) {
-                    System.out.println(name + " wins!");
-                    updatePlayer(name, "AI");
-                    break;
-                }
-                // as above, so below
-                if (ai.aiFire(playerOne.getBoard())) {
-                    playerOne.shipSunk();
-                }
-                if (playerOne.getShipsRemaining() == 0) {
-                    System.out.println("Computer wins!");
-                    updatePlayer("AI", name);
-                    break;
-                }
+    public static void soloGameCLI(String name) {
+        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+        BattleshipBoard ai = new BattleshipBoard(bgLength);
+
+        while (true) {
+            playerOne.printBoard();
+            // fire and pass in your opponents board to confirm if hit worked
+            if (playerOne.playerFire(ai.getBoard())) {
+                ai.shipSunk();
             }
-            //cont = rematch();
-        //}
+            // check to see if the enemies ships are all gone
+            if (ai.getShipsRemaining() == 0) {
+                System.out.println(name + " wins!");
+                updatePlayer(name, "AI");
+                break;
+            }
+
+            // slow down the game for a more natural play
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // as above, so below
+            if (ai.aiFire(playerOne.getBoard())) {
+                playerOne.shipSunk();
+            }
+            if (playerOne.getShipsRemaining() == 0) {
+                System.out.println("Computer wins!");
+                updatePlayer("AI", name);
+                break;
+            }
+        }
     }
 
 
@@ -105,20 +118,27 @@ public class Captain {
     }
 
 
+    public static boolean multiplayer;
+
     /**
      * Controlling method for the multiplayer game (2 real players)
      */
-    public static void multiplayer () throws IOException {
-        Socket socket = new Socket("localhost", 12346);
-        Thread game = new Thread();
-        game.start();
+    public static void multiplayer(String name) throws IOException {
+//        Socket socket = new Socket("localhost", 12346);
+//        Thread game = new Thread();
+//        game.start();
+//
+//
+//        InputStream in = socket.getInputStream();
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+//        System.out.println(reader.readLine());
+//
+        multiplayer = true;
+        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+//        BattleshipBoard ai = new BattleshipBoard(bgLength);
 
 
-        InputStream in = socket.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        System.out.println(reader.readLine());
-
-
+        game.multiplayerPlay();
 
         // here is where we'd put the file checking for player one
 
@@ -139,21 +159,6 @@ public class Captain {
 //            cont = rematch();
 //        }
     }
-
-//    private static boolean rematch () {
-//        while (true) {
-//            System.out.println("Would you like to play again? (Y/N)");
-//            String choice = scanner.nextLine();
-//            if (choice.equalsIgnoreCase("y")) {
-//                break;
-//            } else if (choice.equalsIgnoreCase("n")) {
-//                return false;
-//            } else {
-//                System.out.println("Please enter a Y or N");
-//            }
-//        }
-//        return true;
-//    }
 
 
 //        /**
@@ -182,9 +187,9 @@ public class Captain {
 
     /**
      * @param winner player who won - file updated with win + games attempted
-     * @param loser player who lost - file updated with games attempted
+     * @param loser  player who lost - file updated with games attempted
      */
-    public static void updatePlayer (String winner, String loser){
+    public static void updatePlayer(String winner, String loser) {
 
         HashmapLeaderboard.write(winner, 1, 0);
         HashmapLeaderboard.write(loser, 0, 1);

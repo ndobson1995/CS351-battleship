@@ -137,7 +137,7 @@ public class BoardGUI extends JFrame {
                             JOptionPane.showMessageDialog(main, "Hit!");
                             String[][] hitThis = opponentBattleshipBoard.getBoard();
                             button.setBackground(Color.RED);
-                            hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
+                            hitCount = hitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK);
                             if(hitCount == 5){
                                 JOptionPane.showMessageDialog(main, "You win!");
 
@@ -150,7 +150,7 @@ public class BoardGUI extends JFrame {
                         } else if (button.getText().equals("~")) {
                             button.setBackground(Color.GREEN);
                             String[][] hitThis = opponentBattleshipBoard.getBoard();
-                            aiHitCount = aiHitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK, player);
+                            aiHitCount = aiHitCount + playerBattleshipBoard.guiFire(hitThis, finalI, finalK);
                             controlAIFiring();
                         }
                     }
