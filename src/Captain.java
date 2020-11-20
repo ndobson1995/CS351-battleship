@@ -35,7 +35,7 @@ public class Captain {
 
         while (true) {
 
-            System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
+            System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3), view the leaderboard(4) or quit(0)");
             int choice;
             try {
                 String choiceStr = scanner.nextLine();
