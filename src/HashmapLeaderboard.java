@@ -9,9 +9,9 @@ public class HashmapLeaderboard {
 
     public static void main(String[] args) {
         read();
-        System.out.println("Will played: " + getPlayedTotal("Nicole"));
-        System.out.println("Will won: " + getWins("Nicole"));
-        System.out.println("Will lost: " + getLosses("Nicole"));
+        System.out.println("Will played: " + getPlayedTotal("will"));
+        System.out.println("Will won: " + getWins("will"));
+        System.out.println("Will lost: " + getLosses("will"));
     }
 
 

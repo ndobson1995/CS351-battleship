@@ -52,7 +52,7 @@ public class MultiThreadServer {
             try {
                 OutputStream out1 = clientSocket.getOutputStream();
                 PrintWriter writer = new PrintWriter(out1, true);
-                writer.println("Player  One");
+                writer.println("Player One");
                 portsPlaying.add("name");
             } catch (IOException e) {
                 e.printStackTrace();

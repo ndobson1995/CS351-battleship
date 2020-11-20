@@ -28,7 +28,7 @@ public class Captain {
         scanner = new Scanner(System.in);
         System.out.println("Welcome to Battleship!");
         System.out.print("Enter your name: ");
-        String name = scanner.nextLine();
+        String name = scanner.nextLine().toLowerCase();
 
         while (true) {
 
