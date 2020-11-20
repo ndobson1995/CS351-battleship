@@ -26,12 +26,9 @@ public class Captain {
         //DataInputStream in = new DataInputStream(socket.getInputStream());
         //MUST MATCH SERVER
         scanner = new Scanner(System.in);
-        System.out.println("Welcome to Battleship!");
-        System.out.print("Enter your name: ");
-        String name = scanner.nextLine();
+
 
         while (true) {
-
             System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
             int choice;
             try {
@@ -40,9 +37,9 @@ public class Captain {
                 if (choiceStr.matches("[0-9][0-9]*")) {
                     choice = Integer.parseInt(choiceStr);
                     if (choice == 1) {
-                        soloGameCLI(name);
+                        soloGameCLI();
                     } else if (choice == 2) {
-                        soloGameGUI(name);
+                        soloGameGUI();
                     } else if (choice == 3) {
                         multiplayer();
                     } else if (choice == 0) {
@@ -61,10 +58,13 @@ public class Captain {
     }
 
 
-    public static void soloGameCLI (String name) {
+    public static void soloGameCLI () {
+        System.out.println("Welcome to Battleship!");
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine();
         boolean cont = true;
 
-        while (cont) {
+        while (name!=null && cont) {
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
 
@@ -98,10 +98,15 @@ public class Captain {
     /**
      * Controlling method for the solo game against the AI.
      */
-    public static void soloGameGUI(String name) {
-        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-        BattleshipBoard ai = new BattleshipBoard(bgLength);
-        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, name);
+    public static void soloGameGUI() {
+        LoginPortal portal = new LoginPortal();
+        String name = portal.playerNamePopulated();
+
+        while(name !=null) {
+            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+            BattleshipBoard ai = new BattleshipBoard(bgLength);
+            BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, name);
+        }
     }
 
 
