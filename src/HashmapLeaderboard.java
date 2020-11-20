@@ -7,6 +7,7 @@ public class HashmapLeaderboard {
 
     final static String leaderboardFilePath = "leaderboard.txt";
 
+
     public static void main(String[] args) {
         read();
         System.out.println("Will played: " + getPlayedTotal("will"));

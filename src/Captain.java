@@ -64,7 +64,7 @@ public class Captain {
     public static void soloGameCLI (String name) {
         boolean cont = true;
 
-        while (cont) {
+        //while (cont) {
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
 
@@ -90,8 +90,8 @@ public class Captain {
                     break;
                 }
             }
-            cont = rematch();
-        }
+            //cont = rematch();
+        //}
     }
 
 
@@ -120,9 +120,6 @@ public class Captain {
 
 
 
-
-
-
         // here is where we'd put the file checking for player one
 
         // and here is for player two.
@@ -143,20 +140,20 @@ public class Captain {
 //        }
     }
 
-    private static boolean rematch () {
-        while (true) {
-            System.out.println("Would you like to play again? (Y/N)");
-            String choice = scanner.nextLine();
-            if (choice.equalsIgnoreCase("y")) {
-                break;
-            } else if (choice.equalsIgnoreCase("n")) {
-                return false;
-            } else {
-                System.out.println("Please enter a Y or N");
-            }
-        }
-        return true;
-    }
+//    private static boolean rematch () {
+//        while (true) {
+//            System.out.println("Would you like to play again? (Y/N)");
+//            String choice = scanner.nextLine();
+//            if (choice.equalsIgnoreCase("y")) {
+//                break;
+//            } else if (choice.equalsIgnoreCase("n")) {
+//                return false;
+//            } else {
+//                System.out.println("Please enter a Y or N");
+//            }
+//        }
+//        return true;
+//    }
 
 
 //        /**
