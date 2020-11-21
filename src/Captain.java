@@ -45,7 +45,7 @@ public class Captain {
                     } else if (choice == 2) {
                         soloGameGUI();
                     } else if (choice == 3) {
-                        multiplayer();  //todo will ive taken out all the name parameter passed in, cos the user would choose from teh menu before they log in
+                        multiplayer();
                     } else if (choice == 4) {
                         viewLeaderboard();
                     } else if (choice == 0) {

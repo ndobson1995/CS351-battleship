@@ -115,8 +115,8 @@ public class HashmapLeaderboard {
 
                 //todo sonja testing below/
                 for (Map.Entry<String, ArrayList<Integer>> entry : leaderboard.entrySet()) {
-                    System.out.print(entry.getKey()+"    | ");
-                    for(int user : entry.getValue()){
+                    System.out.print(entry.getKey()+" | ");
+                    for(int user : entry.getValue()){//todo fix up, dont repeat multiple times
                         //System.out.print("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
                         System.out.print(user+"  \t");
                     }
