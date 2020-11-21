@@ -16,13 +16,7 @@ public class Main {
      */
     public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
 
-        // take the username
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter your name: ");
-        String name = scanner.nextLine();
-        System.out.println();
-
         // start thread (after checking login name)
-        new Thread(new Captain(name)).start();
+        new Thread(new Captain()).start();
     }
 }

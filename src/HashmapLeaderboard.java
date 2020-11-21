@@ -11,7 +11,6 @@ public class HashmapLeaderboard {
     final static String leaderboardFilePath = "leaderboard.txt";
 
     /**
-     * @param player the player you're checking the win total of
      * @return the wins
      */
 

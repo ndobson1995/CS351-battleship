@@ -97,8 +97,7 @@ public class LoginPortal extends JFrame implements ActionListener{
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        //TODO TALK WITH SONJA DUPLICATED CODE IN ABOVE METHOD actionPerformed
-        if (value==false){
+        if (!value){
             System.out.println(" Hello " + userName.trim().toUpperCase() + "");
             saveDetailsToFile(userName,true);
             System.out.println("Successful login.");
