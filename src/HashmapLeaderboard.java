@@ -7,11 +7,12 @@ public class HashmapLeaderboard {
 
     final static String leaderboardFilePath = "leaderboard.txt";
 
+
     public static void main(String[] args) {
         read();
-        System.out.println("Will played: " + getPlayedTotal("Nicole"));
-        System.out.println("Will won: " + getWins("Nicole"));
-        System.out.println("Will lost: " + getLosses("Nicole"));
+        System.out.println("Will played: " + getPlayedTotal("will"));
+        System.out.println("Will won: " + getWins("will"));
+        System.out.println("Will lost: " + getLosses("will"));
     }
 
 
@@ -143,8 +144,7 @@ public class HashmapLeaderboard {
     }
 
 
-    public static void read(){
-        Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
-        System.out.println(leaderboard);
+    public static Map<String, ArrayList<Integer>> read(){
+        return readLeaderboard();
     }
 }
