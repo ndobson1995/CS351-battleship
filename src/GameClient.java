@@ -34,7 +34,7 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
     @Override
     public void run() {
         try {
-            gameServer.addToHash(board);
+            gameServer.addToCollection(board);
             System.out.println(gameServer.getPlayerBoards().size());
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -43,16 +43,24 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
         try {
             outerloop:
             while(true) {
-                if (gameServer.getPlayerBoards() != null) {
-                    for (int i = 0; i < gameServer.getPlayerBoards().size(); i++) {
-                        if (board.getBoard() != gameServer.getPlayerBoards().get(i).getBoard()) {
-                            opponentBoard.setBoard(gameServer.getPlayerBoards().get(i).getBoard());
-                            break outerloop;
+                if(gameServer.getPlayerBoards().size() == 1){
+                    Thread.sleep(2000);
+                }else {
+                    //if (gameServer.getPlayerBoards().size() > 1) {
+                        for (int i = 0; i < gameServer.getPlayerBoards().size(); i++) {
+                            if(board.getBoard() == gameServer.getPlayerBoards().get(i).getBoard()){
+
+                            }
+                            else{
+                                opponentBoard.setBoard(gameServer.getPlayerBoards().get(i).getBoard());
+                                //board.setBoard(gameServer.getPlayerBoards().get(i + 1).getBoard());
+                                break outerloop;
+                            }
                         }
-                    }
+                   // }
                 }
             }
-        } catch (RemoteException e) {
+        } catch (RemoteException | InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("true");

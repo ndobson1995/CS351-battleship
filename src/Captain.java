@@ -188,6 +188,7 @@ public class Captain extends UnicastRemoteObject implements Runnable {
 
         Thread thread = new Thread(new Thread(new GameClient(name,
                 (GameServerInterface) Naming.lookup("//localhost:33333/Battleship"))));
+
         thread.start();
 
         // pause the thread that called this method so it doesn't interfere with the multiplayer game!
