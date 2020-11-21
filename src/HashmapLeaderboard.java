@@ -184,7 +184,7 @@ public class HashmapLeaderboard {
 
     /**
      * Method creates the leaderboard file
-     * Headers added to diffrentiate between data
+     * Headers added to differentiate between data
      */
     private static void createFile(){
         FileWriter fw = null;

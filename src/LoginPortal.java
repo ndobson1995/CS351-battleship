@@ -80,6 +80,7 @@ public class LoginPortal extends JFrame implements ActionListener{
             saveDetailsToFile(userName,true);
         }else{
             message.setText("This user is already active.");
+            System.exit(0);
         }
     }
 
@@ -104,6 +105,7 @@ public class LoginPortal extends JFrame implements ActionListener{
             System.out.println("Successful login.");
         }else{
             System.out.println("This user is already active.");
+            System.exit(0);
         }
     }
 
