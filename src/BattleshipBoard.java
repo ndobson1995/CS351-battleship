@@ -10,10 +10,14 @@ import java.util.Scanner;
 public class BattleshipBoard {
 
     private final String[][] player;            // int array for player board
-    private final String[][] opponent;          // int array for opponent board
+    private  String[][] opponent;          // int array for opponent board
     private final int bgLength;                 // length and depth of board
     private int ships = 5;                      // number of ships to play with
 
+
+    public void setOpponent(String[][] opponent){
+        this.opponent = opponent;
+    }
 
     /**
      * Board constructor, create a board for the player and fill it, and build a "blank" board to fire on.
@@ -32,6 +36,31 @@ public class BattleshipBoard {
         for (String[] strings : opponent) {
             Arrays.fill(strings, "~");
         }
+
+        // number of ships the user wants to play with. Capped at 5.
+        for (int i = 0; i < ships; i++) {
+            addShip();
+        }
+    }
+
+    /**
+     * Board constructor, create a board for the player and fill it, and build a "blank" board to fire on.
+     */
+    public BattleshipBoard(int bgLength, BattleshipBoard opponentBoard) {
+        this.bgLength = bgLength;
+        player = new String[bgLength][bgLength];
+        opponent = opponentBoard.player;
+        //opponent = new String[bgLength][bgLength];
+
+        // build your board that shows your ships
+        for (String[] strings : player) {
+            Arrays.fill(strings, "~");
+        }
+
+//        // now build the opponent board that shows where you've fired
+//        for (String[] strings : opponent) {
+//            Arrays.fill(strings, "~");
+//        }
 
         // number of ships the user wants to play with. Capped at 5.
         for (int i = 0; i < ships; i++) {
@@ -274,15 +303,15 @@ public class BattleshipBoard {
             while (X < 0 || X >= bgLength) {
                 System.out.print("Enter X coordinate: ");
                 X = getCoord(X);
-                coords.add(X);
             }
+            coords.add(X);
 
             // have the user enter coordinates for Y (up-down)
             while (Y < 0 || Y >= bgLength) {
                 System.out.print("Enter Y coordinate: ");
                 Y = getCoord(Y);
-                coords.add(Y);
             }
+            coords.add(Y);
             return coords;
     }
 

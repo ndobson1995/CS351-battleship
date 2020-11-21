@@ -83,6 +83,8 @@ public class Captain extends UnicastRemoteObject implements Runnable {
         String name = scanner.nextLine();
         LoginPortal portal = new LoginPortal();
         portal.loginCLI(name);
+
+        //TODO fix
         boolean cont = true;
 
         while (name != null && cont) {
@@ -178,7 +180,6 @@ public class Captain extends UnicastRemoteObject implements Runnable {
      * initiate a multiplayer game
      */
     private void multiplayer() throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
-        BattleshipBoard player = new BattleshipBoard(BG_LENGTH);
 
         System.out.print("Enter your name: ");
         scanner = new Scanner(System.in);
@@ -186,7 +187,8 @@ public class Captain extends UnicastRemoteObject implements Runnable {
         LoginPortal portal = new LoginPortal();
         portal.loginCLI(name);
 
-        Thread thread = new Thread(new Thread(new GameClient(name, player, (GameServerInterface) Naming.lookup("//localhost:33333/Battleship"))));
+        Thread thread = new Thread(new Thread(new GameClient(name,
+                (GameServerInterface) Naming.lookup("//localhost:33333/Battleship"))));
         thread.start();
 
         // pause the thread that called this method so it doesn't interfere with the multiplayer game!

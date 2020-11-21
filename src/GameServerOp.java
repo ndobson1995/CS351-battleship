@@ -14,8 +14,9 @@ public class GameServerOp {
      * @throws MalformedURLException in case URL is incorrect
      */
     public static void main(String[] args) throws RemoteException, MalformedURLException {
-        LocateRegistry.createRegistry(33333);
+        int port = 33333;
+        LocateRegistry.createRegistry(port);
         Naming.rebind("//127.0.0.1:33333/Battleship", new GameServer());
-        System.out.println("Sockets server running on port 13131");
+        System.out.println("Sockets server running on port " + port);
     }
 }

@@ -14,7 +14,7 @@ public class Main {
      * @throws MalformedURLException in case of url issues
      * @throws NotBoundException in case of port issues
      */
-    public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
+    public static void main(String[] args) throws RemoteException{
 
         // start thread (after checking login name)
         new Thread(new Captain()).start();
