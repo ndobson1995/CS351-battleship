@@ -65,7 +65,7 @@ public class LoginPortal extends JFrame implements ActionListener{
             message.setText("This user is already active.");
         }
     }
-
+    //todo SONJA WORK ON THE SCANNER INPUT NAME GETTING PROCESSED - NUMBER TWO
     private void createFile() {
         try {
             FileWriter fw = new FileWriter("login-data.txt", true);
