@@ -133,8 +133,6 @@ public class Captain extends UnicastRemoteObject implements Runnable {
         LoginPortal portal = new LoginPortal();
         String name = null;
 
-        //todo WORK ON THIS get gui and potal login working- NUMBER ONE
-
         while (name == null) {
             name = portal.playerNamePopulated();
             BattleshipBoard playerOne = new BattleshipBoard(BG_LENGTH);

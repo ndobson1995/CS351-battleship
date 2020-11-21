@@ -18,15 +18,10 @@ public class HashmapLeaderboard {
     //todo take out later on - testing
     public static void main(String[] args) {
         read();
-        System.out.println("Will played: " + getPlayedTotal("will"));
-        System.out.println("Will won: " + getWins("will"));
-        System.out.println("Will lost: " + getLosses("will"));
 
-        //todo test - delete below later
         write("sonja",3,4);
         write("willl",3,4);
         write("nic",3,4);
-        System.out.println(HashmapLeaderboard.read());
     }
 
 
@@ -115,17 +110,15 @@ public class HashmapLeaderboard {
                 winsLossesTotals.add(Integer.valueOf(replaceFix[1]));
                 winsLossesTotals.add(Integer.valueOf(replaceFix[2]));
 
-
                 //put name, age in HashMap if they are not empty
                 if (!name.equals("") && !scores.equals(""))
                     leaderboard.put(name, winsLossesTotals);
 
-                //todo sonja testing below/
+
                 for (Map.Entry<String, ArrayList<Integer>> entry : leaderboard.entrySet()) {
                     System.out.print(entry.getKey()+" | ");
-                    for(int user : entry.getValue()){//todo fix up, dont repeat multiple times
-                        //System.out.print("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
-                        System.out.print(user+"  \t");
+                    for(int user : entry.getValue()){
+                        System.out.print("\t"+ user+"  \t");
                     }
                     System.out.println();
                 }
@@ -196,7 +189,7 @@ public class HashmapLeaderboard {
 
     /**
      * Method creates the leaderboard file
-     * Headers added to diffrentiate between data
+     * Headers added to differentiate between data
      */
     private static void createFile(){
         FileWriter fw = null;
