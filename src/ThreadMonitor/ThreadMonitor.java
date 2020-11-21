@@ -41,7 +41,6 @@ class ThreadMonitor {
         }
     }
 
-    //TODO:refactor this, take out lines 45-49 they can be there own method that can all be used in method (getThreadData^)
     public static void searchForThread(){
         Scanner scan = new Scanner(System.in);
         System.out.println("What Thread Name would you like to search for?");
@@ -60,7 +59,6 @@ class ThreadMonitor {
     }
 
 
-    //TODO: look at kierans link (how to kill a java thread)
     public static void deleteThread() throws InterruptedException {
         Scanner scan = new Scanner(System.in);
         System.out.println("What Thread Name would you like to terminate");

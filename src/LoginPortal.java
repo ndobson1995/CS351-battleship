@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.rmi.NotBoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +56,6 @@ public class LoginPortal extends JFrame implements ActionListener{
     public String playerNamePopulated() {
         String playernameToReturn = username_text.getText();
         return playernameToReturn;
-
     }
 
 
