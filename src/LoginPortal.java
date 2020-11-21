@@ -38,7 +38,6 @@ public class LoginPortal extends JFrame implements ActionListener{
         setTitle("BATTLESHIP LOGIN PORTAL");
         setSize(400,250);
         setVisible(true);
-
     }
 
     public String playerNamePopulated() {
@@ -47,12 +46,12 @@ public class LoginPortal extends JFrame implements ActionListener{
 
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String userName = username_text.getText();
         Boolean value = null;
         try {
-            setActivePlayerFlagToFalse("sonja");
             createFile();
             value = checkDetailsAreValid(userName);
         } catch (IOException e1) {
@@ -65,7 +64,30 @@ public class LoginPortal extends JFrame implements ActionListener{
             message.setText("This user is already active.");
         }
     }
+
+    /**
+     * This method handles the name taken from scanner input
+     * */
     //todo SONJA WORK ON THE SCANNER INPUT NAME GETTING PROCESSED - NUMBER TWO
+    public void loginCLI(String name) {
+        String userName = name;
+        Boolean value = null;
+        try {
+            createFile();
+            value = checkDetailsAreValid(userName);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        if (value==false){
+            System.out.println(" Hello " + userName.trim().toUpperCase() + "");
+            saveDetailsToFile(userName,true);
+            System.out.println("Successful login.");
+        }else{
+            System.out.println("This user is already active.");
+        }
+    }
+
+
     private void createFile() {
         try {
             FileWriter fw = new FileWriter("login-data.txt", true);

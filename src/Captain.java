@@ -45,7 +45,7 @@ public class Captain {
                     } else if (choice == 2) {
                         soloGameGUI();
                     } else if (choice == 3) {
-                        multiplayer();  //todo here ive taken out all the names passed in, cos the user would choose from teh menu before they log in
+                        multiplayer();  //todo will ive taken out all the name parameter passed in, cos the user would choose from teh menu before they log in
                     } else if (choice == 4) {
                         viewLeaderboard();
                     } else if (choice == 0) {
@@ -68,6 +68,8 @@ public class Captain {
         System.out.println("Welcome to Battleship!");
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
+        LoginPortal portal = new LoginPortal();
+        portal.loginCLI(name);
         boolean cont = true;
 
         while (name!=null && cont) {
@@ -116,7 +118,8 @@ public class Captain {
     public static void soloGameGUI() {
         LoginPortal portal = new LoginPortal();
         String name = portal.playerNamePopulated();
-//todo SONJA WORK ON THIS gui and potal login working- NUMBER ONE
+
+    //todo SONJA WORK ON THIS gui and potal login working- NUMBER ONE
         while(name !=null) {
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
