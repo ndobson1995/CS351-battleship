@@ -68,7 +68,6 @@ public class LoginPortal extends JFrame implements ActionListener{
     /**
      * This method handles the name taken from scanner input
      * */
-    //todo SONJA WORK ON THE SCANNER INPUT NAME GETTING PROCESSED - NUMBER TWO
     public void loginCLI(String name) {
         String userName = name;
         Boolean value = null;

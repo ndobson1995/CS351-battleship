@@ -18,6 +18,7 @@ public class HashmapLeaderboard {
         write("sonja",3,4);
         write("willl",3,4);
         write("nic",3,4);
+        System.out.println(HashmapLeaderboard.read());
     }
 
 
@@ -84,6 +85,10 @@ public class HashmapLeaderboard {
                 //put name, age in HashMap if they are not empty
                 if (!name.equals("") && !scores.equals(""))
                     leaderboard.put(name, winsLossesTotals);
+
+                //todo sonja testing
+                System.out.println(leaderboard);
+
             }
 
             try {
@@ -118,7 +123,6 @@ public class HashmapLeaderboard {
             FileWriter file = new FileWriter(leaderboardFilePath, true);
 
             BufferedWriter buffStuffWriter = new BufferedWriter(file);
-            buffStuffWriter.append("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
             for(Map.Entry<String, ArrayList<Integer>> entry : scoreSheet.entrySet()){
                 buffStuffWriter.write( entry.getKey() + ":" + entry.getValue());
                 buffStuffWriter.newLine();

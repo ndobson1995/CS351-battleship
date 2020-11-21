@@ -119,7 +119,7 @@ public class Captain {
         LoginPortal portal = new LoginPortal();
         String name = portal.playerNamePopulated();
 
-    //todo SONJA WORK ON THIS gui and potal login working- NUMBER ONE
+    //todo WORK ON THIS get gui and potal login working- NUMBER ONE
         while(name !=null) {
             BattleshipBoard playerOne = new BattleshipBoard(bgLength);
             BattleshipBoard ai = new BattleshipBoard(bgLength);
@@ -218,7 +218,6 @@ public class Captain {
     }
 
     private static void viewLeaderboard() {
-        //todo SONJA WORK ON THIS - NUMBER THREE
         System.out.println(HashmapLeaderboard.read());
         System.out.println();
     }
