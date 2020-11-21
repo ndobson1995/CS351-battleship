@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class Captain extends UnicastRemoteObject implements Runnable {
 
     private static final long serialVersionUID = 1L;
-    private static final int BG_LENGTH = 3;
+    private static final int BG_LENGTH = 5;
     private Scanner scanner;
 
 
@@ -84,44 +84,39 @@ public class Captain extends UnicastRemoteObject implements Runnable {
         LoginPortal portal = new LoginPortal();
         portal.loginCLI(name);
 
-        //TODO fix
-        boolean cont = true;
+        BattleshipBoard playerOne = new BattleshipBoard(BG_LENGTH);
+        BattleshipBoard ai = new BattleshipBoard(BG_LENGTH);
 
-        while (name != null && cont) {
-            BattleshipBoard playerOne = new BattleshipBoard(BG_LENGTH);
-            BattleshipBoard ai = new BattleshipBoard(BG_LENGTH);
+        while (true) {
+            playerOne.printBoard();
+            // fire and pass in your opponents board to confirm if hit worked
+            if (playerOne.playerFire(ai.getBoard())) {
+                ai.shipSunk();
+            }
+            // check to see if the enemies ships are all gone
+            if (ai.getShipsRemaining() == 0) {
+                System.out.println(name + " wins!");
+                updatePlayer(name, "AI");
+                setPlayerFlagToFalse(name);
+                break;
+            }
 
-            while (true) {
-                playerOne.printBoard();
-                // fire and pass in your opponents board to confirm if hit worked
-                if (playerOne.playerFire(ai.getBoard())) {
-                    ai.shipSunk();
-                }
-                // check to see if the enemies ships are all gone
-                if (ai.getShipsRemaining() == 0) {
-                    System.out.println(name + " wins!");
-                    updatePlayer(name, "AI");
-                    setPlayerFlagToFalse(name);
-                    break;
-                }
+            // slow down the game for a more natural play
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-                // slow down the game for a more natural play
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                // as above, so below
-                if (ai.aiFire(playerOne.getBoard())) {
-                    playerOne.shipSunk();
-                }
-                if (playerOne.getShipsRemaining() == 0) {
-                    System.out.println("Computer wins!");
-                    updatePlayer("AI", name);
-                    setPlayerFlagToFalse(name);
-                    break;
-                }
+            // as above, so below
+            if (ai.aiFire(playerOne.getBoard())) {
+                playerOne.shipSunk();
+            }
+            if (playerOne.getShipsRemaining() == 0) {
+                System.out.println("Computer wins!");
+                updatePlayer("AI", name);
+                setPlayerFlagToFalse(name);
+                break;
             }
         }
     }
