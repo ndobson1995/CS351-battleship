@@ -1,4 +1,9 @@
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -33,6 +38,9 @@ public class Captain extends UnicastRemoteObject implements Runnable {
     public void run() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Battleship, " +  name + "!");
+        game = (RMIinterface) Naming.lookup("//localhost:11100/Battleship");
+        scanner = new Scanner(System.in);
+
 
         while (true) {
 
@@ -44,8 +52,9 @@ public class Captain extends UnicastRemoteObject implements Runnable {
                 if (choiceStr.matches("[0-9][0-9]*")) {
                     choice = Integer.parseInt(choiceStr);
                     if (choice == 1) {
-                        soloGameCLI(name);
+                        soloGameCLI();
                     } else if (choice == 2) {
+                        //todo sonja add papremeter
                         soloGameGUI(name, BG_LENGTH);
                     } else if (choice == 3) {
                         multiplayer(name);
@@ -67,25 +76,23 @@ public class Captain extends UnicastRemoteObject implements Runnable {
     }
 
 
-    /**
-     * initiate a single player game with a gui
-     * @param name name of player
-     * @param bgLength size of board
+/**
+     * @throws RemoteException
+     * Base game for cli battleship
+     * Prompts login - player must log in for the board to display
+     * Manages hits/misses and displays update to player
+     * Displays winner of game
      */
-    public void soloGameGUI(String name, int bgLength){
-        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-        BattleshipBoard ai = new BattleshipBoard(bgLength);
-        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, name);
-    }
+    public static void soloGameCLI () throws RemoteException {
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine();
+        LoginPortal portal = new LoginPortal();
+        portal.loginCLI(name);
+        boolean cont = true;
 
-
-    /**
-     * initiate a single player game on the command line
-     * @param name name of player
-     */
-    public void soloGameCLI(String name){
-        BattleshipBoard playerOne = new BattleshipBoard(BG_LENGTH);
-        BattleshipBoard ai = new BattleshipBoard(BG_LENGTH);
+        while (name!=null && cont) {
+            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+            BattleshipBoard ai = new BattleshipBoard(BG_Length);
 
         while (true) {
             playerOne.printBoard();
@@ -97,6 +104,7 @@ public class Captain extends UnicastRemoteObject implements Runnable {
             if (ai.getShipsRemaining() == 0) {
                 System.out.println(name + " wins!");
                 updatePlayer(name, "AI");
+                setPlayerFlagToFalse(name);
                 break;
             }
 
@@ -114,10 +122,31 @@ public class Captain extends UnicastRemoteObject implements Runnable {
             if (playerOne.getShipsRemaining() == 0) {
                 System.out.println("Computer wins!");
                 updatePlayer("AI", name);
+                setPlayerFlagToFalse(name);
                 break;
             }
         }
     }
+    }
+
+
+    /**
+     * Controlling method for the solo game against the AI.
+     */
+    public static void soloGameGUI() {
+        LoginPortal portal = new LoginPortal();
+        String name = portal.playerNamePopulated();
+
+    //todo WORK ON THIS get gui and potal login working- NUMBER ONE
+        while(name !=null) {
+            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+            BattleshipBoard ai = new BattleshipBoard(bgLength);
+            BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, name);
+        }
+        //the game is finished so the player active flag will be set to false
+        setPlayerFlagToFalse(name);
+    }
+
 
 
     /**
@@ -135,6 +164,19 @@ public class Captain extends UnicastRemoteObject implements Runnable {
      * View the leaderboard
      */
     public void viewLeaderboard(){
+    /**
+     * @param playerName - sets to boolean value if player is already playing or not
+     */
+    public static void setPlayerFlagToFalse(String playerName){
+        LoginPortal portal = new LoginPortal();
+        portal.setActivePlayerFlagToFalse(playerName);
+
+    }
+
+    /**
+     * Displays leaderboard - shows player, wins, losses and games played
+     */
+    private static void viewLeaderboard() {
         System.out.println(HashmapLeaderboard.read());
         System.out.println();
     }

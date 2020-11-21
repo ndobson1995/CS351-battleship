@@ -14,6 +14,29 @@ public class HashmapLeaderboard {
      * @param player the player you're checking the win total of
      * @return the wins
      */
+
+
+    //todo take out later on - testing
+    public static void main(String[] args) {
+        read();
+        System.out.println("Will played: " + getPlayedTotal("will"));
+        System.out.println("Will won: " + getWins("will"));
+        System.out.println("Will lost: " + getLosses("will"));
+
+        //todo test - delete below later
+        write("sonja",3,4);
+        write("willl",3,4);
+        write("nic",3,4);
+        System.out.println(HashmapLeaderboard.read());
+    }
+
+
+    /**
+     * gets number of wins from a player using the hashmap
+     *
+     * @param player
+     * @return integer of total games won
+     */
     public static int getWins(String player){
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
         int wins = 0;
@@ -25,10 +48,11 @@ public class HashmapLeaderboard {
         return wins;
     }
 
-
     /**
-     * @param player player being investigates
-     * @return number of losses
+     * gets number of losses from a player using the hashmap
+     *
+     * @param player
+     * @return integer of total games lost
      */
     public static int getLosses(String player){
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
@@ -43,8 +67,10 @@ public class HashmapLeaderboard {
 
 
     /**
-     * @param player player being investigated
-     * @return number of games played
+     * gets number of total game played per user
+     *
+     * @param player
+     * @return total number of games played
      */
     public static int getPlayedTotal(String player){
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
@@ -59,8 +85,10 @@ public class HashmapLeaderboard {
 
 
     /**
-     * Reads the leaderboard.txt file
-     * @return the leaderboard as a map for manipulation
+     * method reads our leaderboard file and splits the data into useable variables
+     * prints out the leaderboard displaying player name, wins, losses & total games played
+     *
+     * @return leaderboard
      */
     private static Map<String, ArrayList<Integer>> readLeaderboard() {
         Map<String, ArrayList<Integer>> leaderboard = new HashMap<>();
@@ -92,6 +120,17 @@ public class HashmapLeaderboard {
                 //put name, age in HashMap if they are not empty
                 if (!name.equals("") && !scores.equals(""))
                     leaderboard.put(name, winsLossesTotals);
+
+                //todo sonja testing below/
+                for (Map.Entry<String, ArrayList<Integer>> entry : leaderboard.entrySet()) {
+                    System.out.print(entry.getKey()+" | ");
+                    for(int user : entry.getValue()){//todo fix up, dont repeat multiple times
+                        //System.out.print("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
+                        System.out.print(user+"  \t");
+                    }
+                    System.out.println();
+                }
+
             }
 
             try {
@@ -106,6 +145,7 @@ public class HashmapLeaderboard {
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
+            createFile();
         }
         catch (IOException ioException) {
             ioException.printStackTrace();
@@ -148,18 +188,28 @@ public class HashmapLeaderboard {
 
         }
         catch(FileNotFoundException e) {
-            try {
-                FileWriter fw = new FileWriter("leaderboard.txt");
-                BufferedWriter bf = new BufferedWriter(fw);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            createFile();
         }
         catch(IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Method creates the leaderboard file
+     * Headers added to diffrentiate between data
+     */
+    private static void createFile(){
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter("leaderboard.txt",true);
+            BufferedWriter buffStuffWriter = new BufferedWriter(fw);
+            buffStuffWriter.append("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public static Map<String, ArrayList<Integer>> read(){
         return readLeaderboard();
