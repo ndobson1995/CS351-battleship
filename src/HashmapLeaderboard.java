@@ -3,44 +3,53 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This controls the leaderboard. Writes a hashmap to a text file.
+ */
 public class HashmapLeaderboard {
 
     final static String leaderboardFilePath = "leaderboard.txt";
 
-
-    public static void main(String[] args) {
-        read();
-        System.out.println("Will played: " + getPlayedTotal("will"));
-        System.out.println("Will won: " + getWins("will"));
-        System.out.println("Will lost: " + getLosses("will"));
-    }
-
-
+    /**
+     * @param player the player you're checking the win total of
+     * @return the wins
+     */
     public static int getWins(String player){
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
-        int gamesPlayed = 0;
+        int wins = 0;
+        // if there isn't an entry for the player in the leaderboard, return 0.
         if(leaderboard.containsKey(player)){
             ArrayList<Integer> scores = leaderboard.get(player);
-            gamesPlayed = scores.get(0);
+            wins = scores.get(0);
         }
-        return gamesPlayed;
+        return wins;
     }
 
 
+    /**
+     * @param player player being investigates
+     * @return number of losses
+     */
     public static int getLosses(String player){
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
-        int gamesPlayed = 0;
+        int losses = 0;
+        // if there isn't an entry for the player in the leaderboard, return 0.
         if(leaderboard.containsKey(player)){
             ArrayList<Integer> scores = leaderboard.get(player);
-            gamesPlayed = scores.get(1);
+            losses = scores.get(1);
         }
-        return gamesPlayed;
+        return losses;
     }
 
 
+    /**
+     * @param player player being investigated
+     * @return number of games played
+     */
     public static int getPlayedTotal(String player){
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
         int gamesPlayed = 0;
+        // if there isn't an entry for the player in the leaderboard, return 0.
         if(leaderboard.containsKey(player)){
             ArrayList<Integer> scores = leaderboard.get(player);
             gamesPlayed = scores.get(2);
@@ -49,6 +58,10 @@ public class HashmapLeaderboard {
     }
 
 
+    /**
+     * Reads the leaderboard.txt file
+     * @return the leaderboard as a map for manipulation
+     */
     private static Map<String, ArrayList<Integer>> readLeaderboard() {
         Map<String, ArrayList<Integer>> leaderboard = new HashMap<>();
 
@@ -90,7 +103,6 @@ public class HashmapLeaderboard {
             try {
                 FileWriter fw = new FileWriter("leaderboard.txt");
                 BufferedWriter bf = new BufferedWriter(fw);
-                bf.append("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -102,7 +114,13 @@ public class HashmapLeaderboard {
     }
 
 
-    public static void write(String player, int win, int loss) {
+    /**
+     * Write to leaderboard.txt
+     * @param player player being added
+     * @param win if they won, this is a 1, if not, a 0
+     * @param loss if they lost, this is a 1, if not, a 0
+     */
+    public synchronized static void write(String player, int win, int loss) {
         HashMap<String, ArrayList<Integer>> scoreSheet = new HashMap<>();
         ArrayList<Integer> gatheredScores = new ArrayList<>();
 
@@ -133,7 +151,6 @@ public class HashmapLeaderboard {
             try {
                 FileWriter fw = new FileWriter("leaderboard.txt");
                 BufferedWriter bf = new BufferedWriter(fw);
-                bf.append("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
