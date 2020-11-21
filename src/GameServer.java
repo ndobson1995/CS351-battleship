@@ -2,6 +2,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * This is the server, it really is only used for multiplayer instances.
@@ -10,7 +11,8 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
 
     private static final long serialVersionUID = 1L;
     private final ArrayList<GameClientInterface> clients;
-    private HashMap<Integer, String[][]> playerBoards;
+    public ArrayList<BattleshipBoard> playerBoards;
+    public LinkedList<BattleshipBoard> playerBoardsList;
 
 
     /**
@@ -19,7 +21,8 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
      */
     protected GameServer() throws RemoteException {
         clients = new ArrayList<>();
-        playerBoards = new HashMap<>();
+        playerBoards = new ArrayList<>();
+        playerBoardsList = new LinkedList<>();
     }
 
 
@@ -45,10 +48,13 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
     //public synchronized void registerClient(GameClientInterface client, BattleshipBoard board){
     public synchronized void registerClient(GameClientInterface client) throws RemoteException {
         this.clients.add(client);
-        //playerBoards.put(client.hashCode(), client.getBoard().getBoard());
     }
 
-    public HashMap<Integer, String[][]> getPlayerBoards() {
+    public ArrayList<BattleshipBoard> getPlayerBoards() {
         return playerBoards;
+    }
+
+    public void addToHash(BattleshipBoard board){
+        playerBoards.add(board);
     }
 }

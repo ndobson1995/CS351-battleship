@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -7,16 +8,16 @@ import java.util.Scanner;
  * Main board building and interaction logic
  */
 
-public class BattleshipBoard {
+public class BattleshipBoard implements Serializable {
 
-    private final String[][] player;            // int array for player board
-    private  String[][] opponent;          // int array for opponent board
+    private String[][] player;            // int array for player board
+    private String[][] opponent;          // int array for opponent board
     private final int bgLength;                 // length and depth of board
     private int ships = 5;                      // number of ships to play with
 
 
-    public void setOpponent(String[][] opponent){
-        this.opponent = opponent;
+    public void setBoard(String[][] opponent){
+        this.player = opponent;
     }
 
     /**
@@ -36,31 +37,6 @@ public class BattleshipBoard {
         for (String[] strings : opponent) {
             Arrays.fill(strings, "~");
         }
-
-        // number of ships the user wants to play with. Capped at 5.
-        for (int i = 0; i < ships; i++) {
-            addShip();
-        }
-    }
-
-    /**
-     * Board constructor, create a board for the player and fill it, and build a "blank" board to fire on.
-     */
-    public BattleshipBoard(int bgLength, BattleshipBoard opponentBoard) {
-        this.bgLength = bgLength;
-        player = new String[bgLength][bgLength];
-        opponent = opponentBoard.player;
-        //opponent = new String[bgLength][bgLength];
-
-        // build your board that shows your ships
-        for (String[] strings : player) {
-            Arrays.fill(strings, "~");
-        }
-
-//        // now build the opponent board that shows where you've fired
-//        for (String[] strings : opponent) {
-//            Arrays.fill(strings, "~");
-//        }
 
         // number of ships the user wants to play with. Capped at 5.
         for (int i = 0; i < ships; i++) {
@@ -316,8 +292,8 @@ public class BattleshipBoard {
     }
 
 
-    public String[][] getBoard(BattleshipBoard board){
-        return player;
+    public String[][] getOpponentBoard(){
+        return opponent;
     }
 
     /**
