@@ -1,40 +1,46 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
 /**
- * Main driver for the program, called Captain because ships
+ * This is the captain controlling the main game. It's called as a thread by main.
+ * This holds the call to the single player games, but not the multiplayer, as that runs over the RMI.
  */
+public class Captain extends UnicastRemoteObject implements Runnable {
 
-public class Captain {
-
-    private static final int bgLength = 3;
-    private static Scanner scanner;
-    private static RMIinterface game;
+    private static final long serialVersionUID = 1L;
+    private static final int BG_LENGTH = 3;
+    private Scanner scanner;
 
 
     /**
-     * run the game
+     * Constructor for game captain
      *
-     * @param args normal arguments
+     * @throws RemoteException in case of connection issues
      */
-    public static void main(String[] args) throws IOException, NotBoundException {
-        menu();
+    protected Captain() throws RemoteException {
     }
 
-    public static void menu() throws IOException, NotBoundException{
-        game = (RMIinterface) Naming.lookup("//localhost:11100/Battleship") ;
-        scanner = new Scanner(System.in);
 
+    /**
+     * Run the main menu of the game, in a loop.
+     */
+    @Override
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome to Battleship!");
 
         while (true) {
-            System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
+
+            System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3), view the leaderboard(4) or quit(0)");
             int choice;
             try {
                 String choiceStr = scanner.nextLine();
@@ -66,57 +72,55 @@ public class Captain {
 
 
     /**
-     * @throws RemoteException
-     * Base game for cli battleship
-     * Prompts login - player must log in for the board to display
-     * Manages hits/misses and displays update to player
-     * Displays winner of game
+     * @throws RemoteException Base game for cli battleship
+     *                         Prompts login - player must log in for the board to display
+     *                         Manages hits/misses and displays update to player
+     *                         Displays winner of game
      */
-    public static void soloGameCLI () throws RemoteException {
-        System.out.println("Welcome to Battleship!");
+    public void soloGameCLI() throws RemoteException {
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
         LoginPortal portal = new LoginPortal();
         portal.loginCLI(name);
         boolean cont = true;
 
-        while (name!=null && cont) {
-            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-            BattleshipBoard ai = new BattleshipBoard(bgLength);
+        while (name != null && cont) {
+            BattleshipBoard playerOne = new BattleshipBoard(BG_LENGTH);
+            BattleshipBoard ai = new BattleshipBoard(BG_LENGTH);
 
-        while (true) {
-            playerOne.printBoard();
-            // fire and pass in your opponents board to confirm if hit worked
-            if (playerOne.playerFire(ai.getBoard())) {
-                ai.shipSunk();
-            }
-            // check to see if the enemies ships are all gone
-            if (ai.getShipsRemaining() == 0) {
-                System.out.println(name + " wins!");
-                updatePlayer(name, "AI");
-                setPlayerFlagToFalse(name);
-                break;
-            }
+            while (true) {
+                playerOne.printBoard();
+                // fire and pass in your opponents board to confirm if hit worked
+                if (playerOne.playerFire(ai.getBoard())) {
+                    ai.shipSunk();
+                }
+                // check to see if the enemies ships are all gone
+                if (ai.getShipsRemaining() == 0) {
+                    System.out.println(name + " wins!");
+                    updatePlayer(name, "AI");
+                    setPlayerFlagToFalse(name);
+                    break;
+                }
 
-            // slow down the game for a more natural play
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                // slow down the game for a more natural play
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-            // as above, so below
-            if (ai.aiFire(playerOne.getBoard())) {
-                playerOne.shipSunk();
-            }
-            if (playerOne.getShipsRemaining() == 0) {
-                System.out.println("Computer wins!");
-                updatePlayer("AI", name);
-                setPlayerFlagToFalse(name);
-                break;
+                // as above, so below
+                if (ai.aiFire(playerOne.getBoard())) {
+                    playerOne.shipSunk();
+                }
+                if (playerOne.getShipsRemaining() == 0) {
+                    System.out.println("Computer wins!");
+                    updatePlayer("AI", name);
+                    setPlayerFlagToFalse(name);
+                    break;
+                }
             }
         }
-    }
     }
 
 
@@ -125,88 +129,19 @@ public class Captain {
      */
     public static void soloGameGUI() {
         LoginPortal portal = new LoginPortal();
-        String name = portal.playerNamePopulated();
+        String name = null;
 
-    //todo WORK ON THIS get gui and potal login working- NUMBER ONE
-        while(name !=null) {
-            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-            BattleshipBoard ai = new BattleshipBoard(bgLength);
-            BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, name);
+        //todo WORK ON THIS get gui and potal login working- NUMBER ONE
+
+        while (name == null) {
+            name = portal.playerNamePopulated();
+            BattleshipBoard playerOne = new BattleshipBoard(BG_LENGTH);
+            BattleshipBoard ai = new BattleshipBoard(BG_LENGTH);
+            BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, BG_LENGTH, name);
         }
         //the game is finished so the player active flag will be set to false
         setPlayerFlagToFalse(name);
     }
-
-
-    public static boolean multiplayer;
-
-    /**
-     * Controlling method for the multiplayer game (2 real players)
-     */
-    public static void multiplayer() throws IOException {
-
-        System.out.print("Enter your name: ");
-        String name = scanner.nextLine();
-//        Socket socket = new Socket("localhost", 12346);
-//        Thread game = new Thread();
-//        game.start();
-//
-//
-//        InputStream in = socket.getInputStream();
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-//        System.out.println(reader.readLine());
-//
-        multiplayer = true;
-        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-//        BattleshipBoard ai = new BattleshipBoard(bgLength);
-
-
-        game.multiplayerPlay();
-        setPlayerFlagToFalse(name);
-
-        // here is where we'd put the file checking for player one
-
-        // and here is for player two.
-//        boolean cont = true;
-//        while(cont) {
-//            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-//            BattleshipBoard playerTwo = new BattleshipBoard(bgLength);
-//
-//            while (true) {
-//                playerOne.printBoard();
-//                playerTwo.printBoard();
-//                // fire and pass in your opponents board to confirm if hit worked
-//                if (fire(playerOneName, playerTwoName, playerOne, playerTwo)) break;
-//                // as above, so below
-//                if (fire(playerTwoName, playerOneName, playerTwo, playerOne)) break;
-//            }
-//            cont = rematch();
-//        }
-    }
-
-
-//        /**
-//         * FIRE
-//         * @param player player firing
-//         * @param opponent player being fired at
-//         * @param playerBoard player firings board
-//         * @param opponentBoard player being fired ats board
-//         * @return boolean if it hit or not
-//         */
-//        private static boolean fire (String player, String opponent, BattleshipBoard playerBoard, BattleshipBoard
-//        opponentBoard){
-//            System.out.println(opponent + " fire");
-//
-//            if (playerBoard.playerFire(opponentBoard.getBoard())) {
-//                opponentBoard.shipSunk();
-//            }
-//            if (opponentBoard.getShipsRemaining() == 0) {
-//                System.out.println(player + " wins!");
-//                updatePlayer(player, opponent);
-//                return true;
-//            }
-//            return false;
-//        }
 
 
     /**
@@ -223,7 +158,7 @@ public class Captain {
     /**
      * @param playerName - sets to boolean value if player is already playing or not
      */
-    public static void setPlayerFlagToFalse(String playerName){
+    public static void setPlayerFlagToFalse(String playerName) {
         LoginPortal portal = new LoginPortal();
         portal.setActivePlayerFlagToFalse(playerName);
 
@@ -237,4 +172,27 @@ public class Captain {
         System.out.println();
     }
 
+
+    /**
+     * initiate a multiplayer game
+     */
+    private void multiplayer() throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+
+        System.out.print("Enter your name: ");
+        scanner = new Scanner(System.in);
+        String name = scanner.nextLine();
+        LoginPortal portal = new LoginPortal();
+        portal.loginCLI(name);
+
+        Thread thread = new Thread(new Thread(new GameClient(name,
+                (GameServerInterface) Naming.lookup("//localhost:33333/Battleship"))));
+        thread.start();
+
+        // pause the thread that called this method so it doesn't interfere with the multiplayer game!
+        synchronized (this) {
+            while (thread.isAlive()) {
+                this.wait();
+            }
+        }
+    }
 }

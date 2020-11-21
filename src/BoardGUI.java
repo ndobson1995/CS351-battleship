@@ -4,6 +4,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
+/**
+ * This is the gui class responsible for building and playing the gui version of the game.
+ * We would have liked to get multiplayer working here, but ran out of time.
+ */
 public class BoardGUI extends JFrame {
 
     private final JPanel yourShips;
@@ -14,8 +18,6 @@ public class BoardGUI extends JFrame {
     private final String player;
     private int hitCount = 0;
     private int aiHitCount = 0;
-    private boolean win;
-
 
     /**
      * Constructor for board.
@@ -187,7 +189,7 @@ public class BoardGUI extends JFrame {
     /**
      * Method to update the board that represents your pieces after the opponent has fired.
      */
-    private void updateYourBoard() {
+    private void updateYourBoard(){
         yourShips.setVisible(false);
         yourShips.removeAll();
         initPlayerBoard(yourShips);

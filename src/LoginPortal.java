@@ -80,13 +80,13 @@ public class LoginPortal extends JFrame implements ActionListener{
             saveDetailsToFile(userName,true);
         }else{
             message.setText("This user is already active.");
-            try {
-                Captain.menu();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NotBoundException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Captain.menu();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (NotBoundException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
@@ -110,13 +110,13 @@ public class LoginPortal extends JFrame implements ActionListener{
             System.out.println("Successful login.");
         }else{
             System.out.println("This user is already active.");
-            try {
-                Captain.menu();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NotBoundException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Captain.menu();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (NotBoundException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
