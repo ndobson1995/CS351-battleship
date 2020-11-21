@@ -45,7 +45,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
     //public synchronized void registerClient(GameClientInterface client, BattleshipBoard board){
     public synchronized void registerClient(GameClientInterface client) throws RemoteException {
         this.clients.add(client);
-        playerBoards.put(client.hashCode(), client.getBoard().getBoard());
+        //playerBoards.put(client.hashCode(), client.getBoard().getBoard());
     }
 
     public HashMap<Integer, String[][]> getPlayerBoards() {
