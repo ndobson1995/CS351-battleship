@@ -17,6 +17,11 @@ public class ServerOperation extends UnicastRemoteObject implements RMIinterface
     }
 
 
+    /**
+     * Starts the server - runs on localhost with port 111000
+     *
+     * @param args normal arguments
+     */
     public static void main(String[] args) {
         // RMI bit
         try{
@@ -54,7 +59,12 @@ public class ServerOperation extends UnicastRemoteObject implements RMIinterface
 //        }
     }
 
-
+//TODO Update this javadoc once implementation is in place
+    /**
+     * This method will allow for multiplayer play in battleships
+     *
+     * @throws RemoteException
+     */
     @Override
     public void multiplayerPlay() throws RemoteException{
         System.out.println("Test");

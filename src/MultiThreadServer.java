@@ -8,6 +8,11 @@ import java.util.List;
 
 public class MultiThreadServer {
 
+    /**
+     * Runs the multithreaded server - port is 12346
+     *
+     * @param args - normal arguments
+     */
     public static void main(String[] args) {
         ServerSocket server = null;
         int counter = 0;

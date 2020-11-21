@@ -8,6 +8,9 @@ public class HashmapLeaderboard {
     final static String leaderboardFilePath = "leaderboard.txt";
 
 
+    /**
+     * @param args - normal arguments
+     */
     public static void main(String[] args) {
         read();
         System.out.println("Will played: " + getPlayedTotal("will"));
@@ -22,6 +25,12 @@ public class HashmapLeaderboard {
     }
 
 
+    /**
+     * gets number of wins from a player using the hashmap
+     *
+     * @param player
+     * @return integer of total games won
+     */
     public static int getWins(String player){
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
         int gamesPlayed = 0;
@@ -33,6 +42,12 @@ public class HashmapLeaderboard {
     }
 
 
+    /**
+     * gets number of losses from a player using the hashmap
+     *
+     * @param player
+     * @return integer of total games lost
+     */
     public static int getLosses(String player){
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
         int gamesPlayed = 0;
@@ -44,6 +59,12 @@ public class HashmapLeaderboard {
     }
 
 
+    /**
+     * gets number of total game played per user
+     *
+     * @param player
+     * @return total number of games played
+     */
     public static int getPlayedTotal(String player){
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
         int gamesPlayed = 0;
@@ -55,6 +76,12 @@ public class HashmapLeaderboard {
     }
 
 
+    /**
+     * method reads our leaderboard file and splits the data into useable variables
+     * prints out the leaderboard displaying player name, wins, losses & total games played
+     *
+     * @return leaderboard
+     */
     private static Map<String, ArrayList<Integer>> readLeaderboard() {
         Map<String, ArrayList<Integer>> leaderboard = new HashMap<>();
 
@@ -106,6 +133,13 @@ public class HashmapLeaderboard {
     }
 
 
+    /**
+     * Writes new name, win & loss data to file
+     *
+     * @param player - name of player
+     * @param win - number of wins player has
+     * @param loss - number of losses player has
+     */
     public static void write(String player, int win, int loss) {
         HashMap<String, ArrayList<Integer>> scoreSheet = new HashMap<>();
         ArrayList<Integer> gatheredScores = new ArrayList<>();
@@ -141,6 +175,10 @@ public class HashmapLeaderboard {
         }
     }
 
+    /**
+     * Method creates the leaderboard file
+     * Headers added to diffrentiate between data
+     */
     private static void createFile(){
         FileWriter fw = null;
         try {

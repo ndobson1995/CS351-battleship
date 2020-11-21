@@ -15,10 +15,19 @@ public class LoginPortal extends JFrame implements ActionListener{
     Map<String, Boolean> loginMap = new HashMap<String, Boolean>();
 
 
+    /**
+     * Runs the login gui interface
+     *
+     * @param args - normal arguments
+     */
     public static void main(String[] args) {
         new LoginPortal();
     }
 
+    /**
+     * Creates the login gui interface
+     * Prompts for user to enter their name
+     */
     LoginPortal () {
         username_label = new JLabel();
         username_label.setText("    User Name :");
@@ -40,6 +49,9 @@ public class LoginPortal extends JFrame implements ActionListener{
         setVisible(true);
     }
 
+    /**
+     * @return username entered into the text field
+     */
     public String playerNamePopulated() {
         String playernameToReturn = username_text.getText();
         return playernameToReturn;
@@ -47,8 +59,14 @@ public class LoginPortal extends JFrame implements ActionListener{
     }
 
 
+    /**
+     * Trys to create login portal file if username is entered & valid
+     * Catches already active players and prompts player to use a different username
+     *
+     * @param action - java param
+     */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent action) {
         String userName = username_text.getText();
         Boolean value = null;
         try {
@@ -67,7 +85,9 @@ public class LoginPortal extends JFrame implements ActionListener{
 
     /**
      * This method handles the name taken from scanner input
-     * */
+     *
+     * @param name - username of player
+     */
     public void loginCLI(String name) {
         String userName = name;
         Boolean value = null;
@@ -77,6 +97,7 @@ public class LoginPortal extends JFrame implements ActionListener{
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+        //TODO TALK WITH SONJA DUPLICATED CODE IN ABOVE METHOD actionPerformed
         if (value==false){
             System.out.println(" Hello " + userName.trim().toUpperCase() + "");
             saveDetailsToFile(userName,true);
@@ -87,6 +108,9 @@ public class LoginPortal extends JFrame implements ActionListener{
     }
 
 
+    /**
+     * File creation method
+     */
     private void createFile() {
         try {
             FileWriter fw = new FileWriter("login-data.txt", true);
@@ -96,8 +120,12 @@ public class LoginPortal extends JFrame implements ActionListener{
         }
     }
 
+
     /**
      * This method will take in the details and check the file to make sure the player is not currently logged in.
+     *
+     * @param playername - name user has entered
+     * @return - boolean dependent on if player name is active or not
      */
     private boolean checkDetailsAreValid(String playername) throws IOException {
         loginMap = getHashMapFromFile();
@@ -120,6 +148,9 @@ public class LoginPortal extends JFrame implements ActionListener{
 
     /**
      * This method will save the details(Player name & Active Player Status to the file
+     *
+     * @param playername - name user has entered
+     * @param activePlayer - true or false value if player is currenly logged on or not
      */
     public void saveDetailsToFile(String playername,boolean activePlayer) {
         loginMap.put(playername, activePlayer);
@@ -142,6 +173,8 @@ public class LoginPortal extends JFrame implements ActionListener{
 
     /**
      * This method will retrieve all the key,value pairs stored in the login file to compare against
+     *
+     * @return mapFileContents - new hashmap of name and active/not-active flag
      */
     private Map<String, Boolean> getHashMapFromFile() {
         String filePath = "login-data.txt";
@@ -171,9 +204,10 @@ public class LoginPortal extends JFrame implements ActionListener{
         return mapFileContents;
     }
 
+
     /**
-     * This method will be called after the user is finished playing the game and search the hashmap containing
-     * login data to find the player names and change the activePlayerFlag to false.
+     * Method called when game has ended, searches hashmap for login data sets active flag to false
+     * @param playername - name user entered
      */
     public void setActivePlayerFlagToFalse(String playername) {
         loginMap = getHashMapFromFile();
