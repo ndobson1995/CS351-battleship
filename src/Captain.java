@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class Captain extends UnicastRemoteObject implements Runnable {
 
     private static final long serialVersionUID = 1L;
-    private static final int BG_LENGTH = 3;
+    private static final int BG_LENGTH = 5;
     private Scanner scanner;
 
 
@@ -79,12 +79,11 @@ public class Captain extends UnicastRemoteObject implements Runnable {
      */
     public void soloGameCLI() throws RemoteException {
         System.out.print("Enter your name: ");
+        scanner = new Scanner(System.in);
         String name = scanner.nextLine();
         LoginPortal portal = new LoginPortal();
-        portal.loginCLI(name);
-        boolean cont = true;
 
-        while (name != null && cont) {
+        if(portal.loginCLI(name)) {
             BattleshipBoard playerOne = new BattleshipBoard(BG_LENGTH);
             BattleshipBoard ai = new BattleshipBoard(BG_LENGTH);
 
@@ -121,6 +120,9 @@ public class Captain extends UnicastRemoteObject implements Runnable {
                 }
             }
         }
+        else{
+            System.out.println("Player already connected.");
+        }
     }
 
 
@@ -130,8 +132,6 @@ public class Captain extends UnicastRemoteObject implements Runnable {
     public static void soloGameGUI() {
         LoginPortal portal = new LoginPortal();
         String name = null;
-
-        //todo WORK ON THIS get gui and potal login working- NUMBER ONE
 
         while (name == null) {
             name = portal.playerNamePopulated();
@@ -196,3 +196,5 @@ public class Captain extends UnicastRemoteObject implements Runnable {
         }
     }
 }
+
+

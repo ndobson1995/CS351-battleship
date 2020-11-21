@@ -80,13 +80,6 @@ public class LoginPortal extends JFrame implements ActionListener{
             saveDetailsToFile(userName,true);
         }else{
             message.setText("This user is already active.");
-//            try {
-//                Captain.menu();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (NotBoundException e) {
-//                e.printStackTrace();
-//            }
         }
     }
 
@@ -95,7 +88,7 @@ public class LoginPortal extends JFrame implements ActionListener{
      *
      * @param name - username of player
      */
-    public void loginCLI(String name) {
+    public boolean loginCLI(String name) {
         String userName = name;
         Boolean value = null;
         try {
@@ -104,20 +97,16 @@ public class LoginPortal extends JFrame implements ActionListener{
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        if (value==false){
+        if (!value){
             System.out.println(" Hello " + userName.trim().toUpperCase() + "");
             saveDetailsToFile(userName,true);
             System.out.println("Successful login.");
+            return true;
         }else{
             System.out.println("This user is already active.");
-//            try {
-//                Captain.menu();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (NotBoundException e) {
-//                e.printStackTrace();
-//            }
+            return false;
         }
+
     }
 
 
