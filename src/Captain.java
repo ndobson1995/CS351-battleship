@@ -64,6 +64,13 @@ public class Captain {
     }
 
 
+    /**
+     * @throws RemoteException
+     * Base game for cli battleship
+     * Prompts login - player must log in for the board to display
+     * Manages hits/misses and displays update to player
+     * Displays winner of game
+     */
     public static void soloGameCLI () throws RemoteException {
         System.out.println("Welcome to Battleship!");
         System.out.print("Enter your name: ");
@@ -211,12 +218,19 @@ public class Captain {
         HashmapLeaderboard.write(loser, 0, 1);
     }
 
+
+    /**
+     * @param playerName - sets to boolean value if player is already playing or not
+     */
     public static void setPlayerFlagToFalse(String playerName){
         LoginPortal portal = new LoginPortal();
         portal.setActivePlayerFlagToFalse(playerName);
 
     }
 
+    /**
+     * Displays leaderboard - shows player, wins, losses and games played
+     */
     private static void viewLeaderboard() {
         System.out.println(HashmapLeaderboard.read());
         System.out.println();
