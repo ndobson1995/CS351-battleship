@@ -88,7 +88,7 @@ public class LoginPortal extends JFrame implements ActionListener{
      *
      * @param name - username of player
      */
-    public void loginCLI(String name) {
+    public boolean loginCLI(String name) {
         String userName = name;
         Boolean value = null;
         try {
@@ -101,9 +101,12 @@ public class LoginPortal extends JFrame implements ActionListener{
             System.out.println(" Hello " + userName.trim().toUpperCase() + "");
             saveDetailsToFile(userName,true);
             System.out.println("Successful login.");
+            return true;
         }else{
             System.out.println("This user is already active.");
+            return false;
         }
+
     }
 
 

@@ -82,42 +82,46 @@ public class Captain extends UnicastRemoteObject implements Runnable {
         scanner = new Scanner(System.in);
         String name = scanner.nextLine();
         LoginPortal portal = new LoginPortal();
-        portal.loginCLI(name);
 
-        BattleshipBoard playerOne = new BattleshipBoard(BG_LENGTH);
-        BattleshipBoard ai = new BattleshipBoard(BG_LENGTH);
+        if(portal.loginCLI(name)) {
+            BattleshipBoard playerOne = new BattleshipBoard(BG_LENGTH);
+            BattleshipBoard ai = new BattleshipBoard(BG_LENGTH);
 
-        while (true) {
-            playerOne.printBoard();
-            // fire and pass in your opponents board to confirm if hit worked
-            if (playerOne.playerFire(ai.getBoard())) {
-                ai.shipSunk();
-            }
-            // check to see if the enemies ships are all gone
-            if (ai.getShipsRemaining() == 0) {
-                System.out.println(name + " wins!");
-                updatePlayer(name, "AI");
-                setPlayerFlagToFalse(name);
-                break;
-            }
+            while (true) {
+                playerOne.printBoard();
+                // fire and pass in your opponents board to confirm if hit worked
+                if (playerOne.playerFire(ai.getBoard())) {
+                    ai.shipSunk();
+                }
+                // check to see if the enemies ships are all gone
+                if (ai.getShipsRemaining() == 0) {
+                    System.out.println(name + " wins!");
+                    updatePlayer(name, "AI");
+                    setPlayerFlagToFalse(name);
+                    break;
+                }
 
-            // slow down the game for a more natural play
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                // slow down the game for a more natural play
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-            // as above, so below
-            if (ai.aiFire(playerOne.getBoard())) {
-                playerOne.shipSunk();
+                // as above, so below
+                if (ai.aiFire(playerOne.getBoard())) {
+                    playerOne.shipSunk();
+                }
+                if (playerOne.getShipsRemaining() == 0) {
+                    System.out.println("Computer wins!");
+                    updatePlayer("AI", name);
+                    setPlayerFlagToFalse(name);
+                    break;
+                }
             }
-            if (playerOne.getShipsRemaining() == 0) {
-                System.out.println("Computer wins!");
-                updatePlayer("AI", name);
-                setPlayerFlagToFalse(name);
-                break;
-            }
+        }
+        else{
+            System.out.println("Player already connected.");
         }
     }
 
