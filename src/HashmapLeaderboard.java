@@ -13,9 +13,9 @@ public class HashmapLeaderboard {
      */
     public static void main(String[] args) {
         read();
-        System.out.println("Will played: " + getPlayedTotal("will"));
-        System.out.println("Will won: " + getWins("will"));
-        System.out.println("Will lost: " + getLosses("will"));
+        System.out.println("sonja played: " + getPlayedTotal("sonja"));
+        System.out.println("sonja won: " + getWins("sonja"));
+        System.out.println("sonja lost: " + getLosses("sonja"));
 
         //todo test - delete below later
         write("sonja",3,4);
@@ -116,8 +116,10 @@ public class HashmapLeaderboard {
                 //todo sonja testing below/
                 for (Map.Entry<String, ArrayList<Integer>> entry : leaderboard.entrySet()) {
                     System.out.print(entry.getKey()+" | ");
+                    //for(int user : entry.getValue()){//todo fix up, dont repeat multiple times
                     for(int user : entry.getValue()){//todo fix up, dont repeat multiple times
                         //System.out.print("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
+                        //System.out.print(user+"  \t");
                         System.out.print(user+"  \t");
                     }
                     System.out.println();

@@ -25,10 +25,11 @@ public class Captain {
      * @param args normal arguments
      */
     public static void main(String[] args) throws IOException, NotBoundException {
+        menu();
+    }
 
-        //DataInputStream in = new DataInputStream(socket.getInputStream());
-        //MUST MATCH SERVER
-        game = (RMIinterface) Naming.lookup("//localhost:11100/Battleship");
+    public static void menu() throws IOException, NotBoundException{
+        game = (RMIinterface) Naming.lookup("//localhost:11100/Battleship") ;
         scanner = new Scanner(System.in);
 
 

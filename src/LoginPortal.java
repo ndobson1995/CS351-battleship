@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.rmi.NotBoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +56,6 @@ public class LoginPortal extends JFrame implements ActionListener{
     public String playerNamePopulated() {
         String playernameToReturn = username_text.getText();
         return playernameToReturn;
-
     }
 
 
@@ -80,7 +80,13 @@ public class LoginPortal extends JFrame implements ActionListener{
             saveDetailsToFile(userName,true);
         }else{
             message.setText("This user is already active.");
-            System.exit(0);
+            try {
+                Captain.menu();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -98,14 +104,19 @@ public class LoginPortal extends JFrame implements ActionListener{
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        //TODO TALK WITH SONJA DUPLICATED CODE IN ABOVE METHOD actionPerformed
         if (value==false){
             System.out.println(" Hello " + userName.trim().toUpperCase() + "");
             saveDetailsToFile(userName,true);
             System.out.println("Successful login.");
         }else{
             System.out.println("This user is already active.");
-            System.exit(0);
+            try {
+                Captain.menu();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
