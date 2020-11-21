@@ -47,6 +47,9 @@ public class LoginPortal extends JFrame implements ActionListener{
         add(panel, BorderLayout.CENTER);
         setTitle("BATTLESHIP LOGIN PORTAL");
         setSize(400,250);
+    }
+
+    public void createPage(){
         setVisible(true);
     }
 
@@ -134,7 +137,7 @@ public class LoginPortal extends JFrame implements ActionListener{
         for(Map.Entry<String, Boolean> entry : loginMap.entrySet()) {
             if (loginMap.containsKey(playername)) {
                 boolean value = loginMap.get(playername);
-                if (value == true) {
+                if (value) {
                     message.setText("You are already active");
                     return true;
                 } else {

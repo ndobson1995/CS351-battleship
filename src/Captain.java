@@ -19,6 +19,7 @@ public class Captain extends UnicastRemoteObject implements Runnable {
     private static final long serialVersionUID = 1L;
     private static final int BG_LENGTH = 5;
     private Scanner scanner;
+    private static LoginPortal portal;
 
 
     /**
@@ -130,7 +131,8 @@ public class Captain extends UnicastRemoteObject implements Runnable {
      * Controlling method for the solo game against the AI.
      */
     public static void soloGameGUI() {
-        LoginPortal portal = new LoginPortal();
+        portal = new LoginPortal();
+        portal.createPage();
         String name = null;
 
         while (name == null) {
@@ -159,7 +161,7 @@ public class Captain extends UnicastRemoteObject implements Runnable {
      * @param playerName - sets to boolean value if player is already playing or not
      */
     public static void setPlayerFlagToFalse(String playerName) {
-        LoginPortal portal = new LoginPortal();
+        portal = new LoginPortal();
         portal.setActivePlayerFlagToFalse(playerName);
 
     }
@@ -181,7 +183,7 @@ public class Captain extends UnicastRemoteObject implements Runnable {
         System.out.print("Enter your name: ");
         scanner = new Scanner(System.in);
         String name = scanner.nextLine();
-        LoginPortal portal = new LoginPortal();
+        portal = new LoginPortal();
         portal.loginCLI(name);
 
         Thread thread = new Thread(new Thread(new GameClient(name,
