@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 /**
@@ -29,13 +30,10 @@ public class Captain {
         //MUST MATCH SERVER
         game = (RMIinterface) Naming.lookup("//localhost:11100/Battleship");
         scanner = new Scanner(System.in);
-        System.out.println("Welcome to Battleship!");
-        System.out.print("Enter your name: ");
-        String name = scanner.nextLine().toLowerCase();
+
 
         while (true) {
-
-            System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3), view the leaderboard(4) or quit(0)");
+            System.out.println("Play solo on CLI (1), solo on GUI(2), with someone(3) or quit(0)");
             int choice;
             try {
                 String choiceStr = scanner.nextLine();
@@ -43,11 +41,11 @@ public class Captain {
                 if (choiceStr.matches("[0-9][0-9]*")) {
                     choice = Integer.parseInt(choiceStr);
                     if (choice == 1) {
-                        soloGameCLI(name);
+                        soloGameCLI();
                     } else if (choice == 2) {
-                        soloGameGUI(name);
+                        soloGameGUI();
                     } else if (choice == 3) {
-                        multiplayer(name);
+                        multiplayer();
                     } else if (choice == 4) {
                         viewLeaderboard();
                     } else if (choice == 0) {
@@ -66,9 +64,24 @@ public class Captain {
     }
 
 
-    public static void soloGameCLI(String name) {
-        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-        BattleshipBoard ai = new BattleshipBoard(bgLength);
+    /**
+     * @throws RemoteException
+     * Base game for cli battleship
+     * Prompts login - player must log in for the board to display
+     * Manages hits/misses and displays update to player
+     * Displays winner of game
+     */
+    public static void soloGameCLI () throws RemoteException {
+        System.out.println("Welcome to Battleship!");
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine();
+        LoginPortal portal = new LoginPortal();
+        portal.loginCLI(name);
+        boolean cont = true;
+
+        while (name!=null && cont) {
+            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+            BattleshipBoard ai = new BattleshipBoard(bgLength);
 
         while (true) {
             playerOne.printBoard();
@@ -80,6 +93,7 @@ public class Captain {
             if (ai.getShipsRemaining() == 0) {
                 System.out.println(name + " wins!");
                 updatePlayer(name, "AI");
+                setPlayerFlagToFalse(name);
                 break;
             }
 
@@ -97,19 +111,29 @@ public class Captain {
             if (playerOne.getShipsRemaining() == 0) {
                 System.out.println("Computer wins!");
                 updatePlayer("AI", name);
+                setPlayerFlagToFalse(name);
                 break;
             }
         }
+    }
     }
 
 
     /**
      * Controlling method for the solo game against the AI.
      */
-    public static void soloGameGUI(String name) {
-        BattleshipBoard playerOne = new BattleshipBoard(bgLength);
-        BattleshipBoard ai = new BattleshipBoard(bgLength);
-        BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, name);
+    public static void soloGameGUI() {
+        LoginPortal portal = new LoginPortal();
+        String name = portal.playerNamePopulated();
+
+    //todo WORK ON THIS get gui and potal login working- NUMBER ONE
+        while(name !=null) {
+            BattleshipBoard playerOne = new BattleshipBoard(bgLength);
+            BattleshipBoard ai = new BattleshipBoard(bgLength);
+            BoardGUI playerOneGUI = new BoardGUI(playerOne, ai, bgLength, name);
+        }
+        //the game is finished so the player active flag will be set to false
+        setPlayerFlagToFalse(name);
     }
 
 
@@ -118,7 +142,10 @@ public class Captain {
     /**
      * Controlling method for the multiplayer game (2 real players)
      */
-    public static void multiplayer(String name) throws IOException {
+    public static void multiplayer() throws IOException {
+
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine();
 //        Socket socket = new Socket("localhost", 12346);
 //        Thread game = new Thread();
 //        game.start();
@@ -134,6 +161,7 @@ public class Captain {
 
 
         game.multiplayerPlay();
+        setPlayerFlagToFalse(name);
 
         // here is where we'd put the file checking for player one
 
@@ -191,6 +219,18 @@ public class Captain {
     }
 
 
+    /**
+     * @param playerName - sets to boolean value if player is already playing or not
+     */
+    public static void setPlayerFlagToFalse(String playerName){
+        LoginPortal portal = new LoginPortal();
+        portal.setActivePlayerFlagToFalse(playerName);
+
+    }
+
+    /**
+     * Displays leaderboard - shows player, wins, losses and games played
+     */
     private static void viewLeaderboard() {
         System.out.println(HashmapLeaderboard.read());
         System.out.println();
