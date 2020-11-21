@@ -13,6 +13,11 @@ public class HashmapLeaderboard {
         System.out.println("Will played: " + getPlayedTotal("will"));
         System.out.println("Will won: " + getWins("will"));
         System.out.println("Will lost: " + getLosses("will"));
+
+        //todo test - delete below later
+        write("sonja",3,4);
+        write("willl",3,4);
+        write("nic",3,4);
     }
 
 
@@ -87,13 +92,7 @@ public class HashmapLeaderboard {
                 e.printStackTrace();
             }
         } catch (FileNotFoundException e) {
-            try {
-                FileWriter fw = new FileWriter("leaderboard.txt");
-                BufferedWriter bf = new BufferedWriter(fw);
-                bf.append("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            createFile();
         }
         catch (IOException ioException) {
             ioException.printStackTrace();
@@ -119,6 +118,7 @@ public class HashmapLeaderboard {
             FileWriter file = new FileWriter(leaderboardFilePath, true);
 
             BufferedWriter buffStuffWriter = new BufferedWriter(file);
+            buffStuffWriter.append("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
             for(Map.Entry<String, ArrayList<Integer>> entry : scoreSheet.entrySet()){
                 buffStuffWriter.write( entry.getKey() + ":" + entry.getValue());
                 buffStuffWriter.newLine();
@@ -130,19 +130,24 @@ public class HashmapLeaderboard {
 
         }
         catch(FileNotFoundException e) {
-            try {
-                FileWriter fw = new FileWriter("leaderboard.txt");
-                BufferedWriter bf = new BufferedWriter(fw);
-                bf.append("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            createFile();
         }
         catch(IOException e) {
             e.printStackTrace();
         }
     }
 
+    private static void createFile(){
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter("leaderboard.txt",true);
+            BufferedWriter buffStuffWriter = new BufferedWriter(fw);
+            buffStuffWriter.append("\nPlayer name\t\t Player Wins\t Player Losses\t Player Attempts\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public static Map<String, ArrayList<Integer>> read(){
         return readLeaderboard();

@@ -134,6 +134,7 @@ public class LoginPortal extends JFrame implements ActionListener{
             }
             bf.close();
         } catch (FileNotFoundException e) {
+            createFile();
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -193,7 +194,7 @@ public class LoginPortal extends JFrame implements ActionListener{
             }
             bf.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            createFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
