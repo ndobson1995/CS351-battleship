@@ -81,7 +81,7 @@ public class BattleshipBoard implements Serializable {
      *
      * @param board either the player or the opponents board
      */
-    private void printBoards(String[][] board) {
+    public void printBoards(String[][] board) {
         int iter2 = 0;
         System.out.print("   |");
         while (iter2 != bgLength) {
@@ -275,20 +275,20 @@ public class BattleshipBoard implements Serializable {
     public ArrayList<Integer> multiplayerFire() {
         ArrayList<Integer> coords = new ArrayList<>();
         int X = -1, Y = -1;
-            // have the user enter coordinates for X (left-right)
-            while (X < 0 || X >= bgLength) {
-                System.out.print("Enter X coordinate: ");
-                X = getCoord(X);
-            }
-            coords.add(X);
+        // have the user enter coordinates for X (left-right)
+        while (X < 0 || X >= bgLength) {
+            System.out.print("Enter X coordinate: ");
+            X = getCoord(X);
+        }
+        coords.add(X);
 
-            // have the user enter coordinates for Y (up-down)
-            while (Y < 0 || Y >= bgLength) {
-                System.out.print("Enter Y coordinate: ");
-                Y = getCoord(Y);
-            }
-            coords.add(Y);
-            return coords;
+        // have the user enter coordinates for Y (up-down)
+        while (Y < 0 || Y >= bgLength) {
+            System.out.print("Enter Y coordinate: ");
+            Y = getCoord(Y);
+        }
+        coords.add(Y);
+        return coords;
     }
 
 

@@ -8,8 +8,8 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
     private final GameServerInterface gameServer;
     private final String name;
     public BattleshipBoard board;
-    public BattleshipBoard opponentBoard;
-
+    private String[][] blankBoard;
+    private int hits = 0;
 
     /**
      * Constructor for game client
@@ -22,8 +22,9 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
         this.name = name;
         this.gameServer = gameServer;
         board = new BattleshipBoard(BG_LENGTH);
-        opponentBoard = new BattleshipBoard(BG_LENGTH);
         gameServer.registerClient(this);
+        blankBoard = new BattleshipBoard(Captain.getBG_LENGTH()).getOpponentBoard();
+
     }
 
 
@@ -33,47 +34,71 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
     @Override
     public void run() {
         try {
-            gameServer.addToCollection(board);
-            System.out.println(gameServer.getPlayerBoards().size());
+            gameServer.addToCollection(board, name);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
 
         try {
-            outerloop:
+            System.out.println("Waiting for a game");
             while(true) {
-                if(gameServer.getPlayerBoards().size() == 1){
-                    Thread.sleep(2000);
-                }else {
-                    if (gameServer.getPlayerBoards().size() > 1) {
-                        for (int i = 0; i < gameServer.getPlayerBoards().size(); i++) {
-                            if(board.getBoard() != gameServer.getPlayerBoards().get(i).getBoard()){
-                                opponentBoard.setBoard(gameServer.getPlayerBoards().get(i).getBoard());
-                                break outerloop;
-                            }
-                        }
-                   }
+                if(gameServer.getPlayerBoards() < 2){
+                    Thread.sleep(5000);
+                }
+                else{
+                    break;
                 }
             }
         } catch (RemoteException | InterruptedException e) {
             e.printStackTrace();
         }
-
-        while (true) {
-            board.printBoard();
-            ArrayList<Integer> coords = board.multiplayerFire();
-            try {
-                gameServer.sendMoves(coords.get(0), coords.get(1), board);
-
-                if(board.getShipsRemaining() == 0){
-                    System.out.println("Game over!");
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+        try {
+            gameLogic();
+            gameServer.deregisterClient(this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 
+
+
+    private void gameLogic() throws RemoteException {
+        while (true) {
+            board.printBoards(gameServer.printPlayerBoards(name));
+            board.printBoards(blankBoard);
+            boolean firedSuccessfully = false;
+            while(!firedSuccessfully) {
+                firedSuccessfully = fire();
+            }
+            if(hits == 5){
+                System.out.println("You win!");
+                break;
+            }
+
+        }
+    }
+
+    private synchronized boolean fire(){
+        ArrayList<Integer> coords = board.multiplayerFire();
+        try {
+            if (blankBoard[coords.get(1)][coords.get(0)].equals("X") ||
+                    blankBoard[coords.get(1)][coords.get(0)].equals("o")
+            ) {
+                System.out.println("Already fired here, try again");
+            } else if (gameServer.sendMoves(coords.get(0), coords.get(1), name)) {
+                gameServer.updateOpponentBoard(coords.get(0), coords.get(1));
+                blankBoard[coords.get(1)][coords.get(0)] = "X";
+                hits++;
+                return true;
+            } else {
+                blankBoard[coords.get(1)][coords.get(0)] = "o";
+                return true;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     /**
      * @param X X coordinate
@@ -81,9 +106,10 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
      */
     @Override
     public void getMoves(int X, int Y, BattleshipBoard board) throws RemoteException {
-        if(getBoard() != board) {
-            System.out.println(board.multiplayerHitOrMiss(opponentBoard.getBoard(), X, Y));
-        }
+
+//        if(getBoard() != board) {
+//            System.out.println(board.multiplayerHitOrMiss(opponentBoard.getBoard(), X, Y));
+//        }
     }
 
     @Override

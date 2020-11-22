@@ -1,9 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -17,7 +12,7 @@ import java.util.Scanner;
 public class Captain extends UnicastRemoteObject implements Runnable {
 
     private static final long serialVersionUID = 1L;
-    private static final int BG_LENGTH = 7;
+    private static final int BG_LENGTH = 5;
     private Scanner scanner;
     private static LoginPortal portal;
 
@@ -30,6 +25,10 @@ public class Captain extends UnicastRemoteObject implements Runnable {
     protected Captain() throws RemoteException {
     }
 
+
+    public static int getBG_LENGTH(){
+        return BG_LENGTH;
+    }
 
     /**
      * Run the main menu of the game, in a loop.

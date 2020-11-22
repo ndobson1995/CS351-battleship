@@ -1,8 +1,8 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This is the server, it really is only used for multiplayer instances.
@@ -11,7 +11,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
 
     private static final long serialVersionUID = 1L;
     private final ArrayList<GameClientInterface> clients;
-    public ArrayList<BattleshipBoard> playerBoards;
+    public LinkedHashMap<String, BattleshipBoard> playerBoards;
     public ArrayList<Integer> moves;
 
 
@@ -21,7 +21,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
      */
     protected GameServer() throws RemoteException {
         clients = new ArrayList<>();
-        playerBoards = new ArrayList<>();
+        playerBoards = new LinkedHashMap<>();
         moves = new ArrayList<>();
     }
 
@@ -32,12 +32,16 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
      * @param Y Y coordinate
      */
     @Override
-    public synchronized void sendMoves(int X, int Y, BattleshipBoard board) throws RemoteException {
+    public synchronized boolean sendMoves(int X, int Y, String name) throws RemoteException {
+        AtomicBoolean hit = new AtomicBoolean(false);
 
-        int i = 0;
-        while(i < clients.size()){
-            clients.get(i++).getMoves(X, Y, board);
-        }
+        playerBoards.forEach((k,v) -> {
+            if(!k.equals(name)){
+                BattleshipBoard target = playerBoards.get(k);
+                hit.set(target.multiplayerHitOrMiss(target.getBoard(), X, Y));
+            }
+        });
+        return hit.get();
     }
 
 
@@ -46,16 +50,54 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
      * @param client client to be registered
      */
     @Override
-    //public synchronized void registerClient(GameClientInterface client, BattleshipBoard board){
     public synchronized void registerClient(GameClientInterface client) throws RemoteException {
         this.clients.add(client);
     }
 
-    public ArrayList<BattleshipBoard> getPlayerBoards() {
-        return playerBoards;
+
+    /**
+     * add the new clients to a list
+     * @param client client to be registered
+     */
+    @Override
+    public synchronized void deregisterClient(GameClientInterface client) throws RemoteException {
+        this.clients.remove(client);
     }
 
-    public void addToCollection(BattleshipBoard board){
-        playerBoards.add(board);
+
+    /**
+     * @return size of playerboards collection
+     */
+    @Override
+    public int getPlayerBoards() {
+        return playerBoards.size();
+    }
+
+
+    /**
+     * add to collection
+     * @param board board to add
+     * @param name name to be used as key
+     */
+    @Override
+    public void addToCollection(BattleshipBoard board, String name){
+        playerBoards.put(name, board);
+    }
+
+
+    /**
+     * @param name player name
+     * @return players board
+     */
+    @Override
+    public String[][] printPlayerBoards(String name){
+        return playerBoards.get(name).getBoard();
+    }
+
+
+
+    @Override
+    public void updateOpponentBoard(int X, int Y){
+
     }
 }
