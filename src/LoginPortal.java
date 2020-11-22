@@ -3,27 +3,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.rmi.NotBoundException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginPortal extends JFrame implements ActionListener{
 
-    JPanel panel;
-    JLabel username_label, message;
-    JTextField username_text;
-    JButton submit;
-    Map<String, Boolean> loginMap = new HashMap<String, Boolean>();
-
-
-    /**
-     * Runs the login gui interface
-     *
-     * @param args - normal arguments
-     */
-    public static void main(String[] args) {
-        new LoginPortal();
-    }
+    private JPanel panel;
+    private JLabel username_label, message;
+    private JTextField username_text;
+    private JButton submit;
+    private Map<String, Boolean> loginMap = new HashMap<>();
 
     /**
      * Creates the login gui interface
@@ -49,16 +38,15 @@ public class LoginPortal extends JFrame implements ActionListener{
         setSize(400,250);
     }
 
-    public void createPage(){
+    protected void createPage() {
         setVisible(true);
     }
 
     /**
      * @return username entered into the text field
      */
-    public String playerNamePopulated() {
-        String playernameToReturn = username_text.getText();
-        return playernameToReturn;
+    protected String playerNamePopulated() {
+        return username_text.getText();
     }
 
 
@@ -71,14 +59,10 @@ public class LoginPortal extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent action) {
         String userName = username_text.getText();
-        Boolean value = null;
-        try {
-            createFile();
-            value = checkDetailsAreValid(userName);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        if (value==false){
+        Boolean value;
+        createFile();
+        value = checkDetailsAreValid(userName);
+        if (!value) {
             message.setText(" Hello " + userName.trim().toUpperCase() + "");
             saveDetailsToFile(userName,true);
         }else{
@@ -89,17 +73,12 @@ public class LoginPortal extends JFrame implements ActionListener{
     /**
      * This method handles the name taken from scanner input
      *
-     * @param name - username of player
+     * @param userName - username of player
      */
-    public boolean loginCLI(String name) {
-        String userName = name;
+    protected boolean loginCLI(String userName) throws NullPointerException {
         Boolean value = null;
-        try {
-            createFile();
-            value = checkDetailsAreValid(userName);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        createFile();
+        value = checkDetailsAreValid(userName);
         if (!value){
             System.out.println(" Hello " + userName.trim().toUpperCase() + "");
             saveDetailsToFile(userName,true);
@@ -132,7 +111,7 @@ public class LoginPortal extends JFrame implements ActionListener{
      * @param playername - name user has entered
      * @return - boolean dependent on if player name is active or not
      */
-    private boolean checkDetailsAreValid(String playername) throws IOException {
+    private boolean checkDetailsAreValid(String playername) {
         loginMap = getHashMapFromFile();
         for(Map.Entry<String, Boolean> entry : loginMap.entrySet()) {
             if (loginMap.containsKey(playername)) {
@@ -157,7 +136,7 @@ public class LoginPortal extends JFrame implements ActionListener{
      * @param playername - name user has entered
      * @param activePlayer - true or false value if player is currenly logged on or not
      */
-    public synchronized void saveDetailsToFile(String playername,boolean activePlayer) {
+    protected synchronized void saveDetailsToFile(String playername, boolean activePlayer) {
         loginMap.put(playername, activePlayer);
         try {
             FileWriter fw = new FileWriter("login-data.txt", true);
@@ -183,12 +162,12 @@ public class LoginPortal extends JFrame implements ActionListener{
      */
     private Map<String, Boolean> getHashMapFromFile() {
         String filePath = "login-data.txt";
-        Map<String, Boolean> mapFileContents = new HashMap<String, Boolean>();
+        Map<String, Boolean> mapFileContents = new HashMap<>();
         BufferedReader br = null;
         try{
             File file = new File(filePath);
             br = new BufferedReader( new FileReader(file) );
-            String line = null;
+            String line;
 
             while ( (line = br.readLine()) != null ){
                 String[] parts = line.split(":");
@@ -203,7 +182,9 @@ public class LoginPortal extends JFrame implements ActionListener{
             if(br != null){
                 try {
                     br.close();
-                }catch(Exception e){};
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         return mapFileContents;
@@ -214,9 +195,9 @@ public class LoginPortal extends JFrame implements ActionListener{
      * Method called when game has ended, searches hashmap for login data sets active flag to false
      * @param playername - name user entered
      */
-    public void setActivePlayerFlagToFalse(String playername) {
+    protected void setActivePlayerFlagToFalse(String playername) {
         loginMap = getHashMapFromFile();
-        Map<String, Boolean> newLoginDataMap = new HashMap<String, Boolean>();
+        Map<String, Boolean> newLoginDataMap = new HashMap<>();
         try {
             FileWriter fw = new FileWriter("login-data.txt", true);
             BufferedWriter bf = new BufferedWriter(fw);
