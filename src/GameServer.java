@@ -12,7 +12,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
     private static final long serialVersionUID = 1L;
     private final ArrayList<GameClientInterface> clients;
     public ArrayList<BattleshipBoard> playerBoards;
-    public LinkedList<BattleshipBoard> playerBoardsList;
+    public ArrayList<Integer> moves;
 
 
     /**
@@ -22,7 +22,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
     protected GameServer() throws RemoteException {
         clients = new ArrayList<>();
         playerBoards = new ArrayList<>();
-        playerBoardsList = new LinkedList<>();
+        moves = new ArrayList<>();
     }
 
 
@@ -33,6 +33,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
      */
     @Override
     public synchronized void sendMoves(int X, int Y, BattleshipBoard board) throws RemoteException {
+
         int i = 0;
         while(i < clients.size()){
             clients.get(i++).getMoves(X, Y, board);

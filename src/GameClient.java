@@ -64,6 +64,10 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
             ArrayList<Integer> coords = board.multiplayerFire();
             try {
                 gameServer.sendMoves(coords.get(0), coords.get(1), board);
+
+                if(board.getShipsRemaining() == 0){
+                    System.out.println("Game over!");
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

@@ -11,21 +11,6 @@ public class HashmapLeaderboard {
     final static String leaderboardFilePath = "leaderboard.txt";
 
     /**
-     * @return the wins
-     */
-
-
-    //todo take out later on - testing
-    public static void main(String[] args) {
-        read();
-
-        write("sonja",3,4);
-        write("willl",3,4);
-        write("nic",3,4);
-    }
-
-
-    /**
      * gets number of wins from a player using the hashmap
      *
      * @param player
@@ -203,6 +188,7 @@ public class HashmapLeaderboard {
 
     public static void print(){
         Map<String, ArrayList<Integer>> leaderboard = read();
+        System.out.println("\t\tWon\t\tLost\tTotal");
         for (Map.Entry<String, ArrayList<Integer>> entry : leaderboard.entrySet()) {
             System.out.print(entry.getKey()+" | ");
             for(int user : entry.getValue()){
