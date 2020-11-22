@@ -32,7 +32,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
      * @param Y Y coordinate
      */
     @Override
-    public synchronized boolean sendMoves(int X, int Y, String name) throws RemoteException {
+    public synchronized boolean sendMoves(int X, int Y, String name){
         AtomicBoolean hit = new AtomicBoolean(false);
 
         playerBoards.forEach((k,v) -> {
@@ -50,7 +50,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
      * @param client client to be registered
      */
     @Override
-    public synchronized void registerClient(GameClientInterface client) throws RemoteException {
+    public synchronized void registerClient(GameClientInterface client){
         this.clients.add(client);
     }
 
@@ -60,7 +60,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
      * @param client client to be registered
      */
     @Override
-    public synchronized void deregisterClient(GameClientInterface client) throws RemoteException {
+    public synchronized void deregisterClient(GameClientInterface client){
         this.clients.remove(client);
     }
 
@@ -97,7 +97,14 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
 
 
     @Override
-    public void updateOpponentBoard(int X, int Y){
-
+    public void updateOpponentBoard(int X, int Y, GameClientInterface client) throws RemoteException {
+        for(int i = 0; i < clients.size(); i++){
+            if(clients.get(i) != client){
+                clients.get(i).printAfterShot();
+            }
+            else{
+                System.out.println();
+            }
+        }
     }
 }

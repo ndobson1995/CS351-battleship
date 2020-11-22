@@ -64,7 +64,9 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
 
     private void gameLogic() throws RemoteException {
         while (true) {
+            System.out.println("\n---YOUR BOARD---");
             board.printBoards(gameServer.printPlayerBoards(name));
+            System.out.println("\n---FIRING RANGE---");
             board.printBoards(blankBoard);
             boolean firedSuccessfully = false;
             while(!firedSuccessfully) {
@@ -86,11 +88,12 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
             ) {
                 System.out.println("Already fired here, try again");
             } else if (gameServer.sendMoves(coords.get(0), coords.get(1), name)) {
-                gameServer.updateOpponentBoard(coords.get(0), coords.get(1));
+                gameServer.updateOpponentBoard(coords.get(0), coords.get(1), this);
                 blankBoard[coords.get(1)][coords.get(0)] = "X";
                 hits++;
                 return true;
             } else {
+                gameServer.updateOpponentBoard(coords.get(0), coords.get(1), this);
                 blankBoard[coords.get(1)][coords.get(0)] = "o";
                 return true;
             }
@@ -106,7 +109,7 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
      */
     @Override
     public void getMoves(int X, int Y, BattleshipBoard board) throws RemoteException {
-
+        board.printBoards(gameServer.printPlayerBoards(name));
 //        if(getBoard() != board) {
 //            System.out.println(board.multiplayerHitOrMiss(opponentBoard.getBoard(), X, Y));
 //        }
@@ -115,6 +118,16 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
     @Override
     public BattleshipBoard getBoard() throws RemoteException {
         return board;
+    }
+
+
+    @Override
+    public void printAfterShot() throws RemoteException {
+        System.out.println("\n==============================\n");
+        System.out.println("\n---YOUR BOARD---");
+        board.printBoards(gameServer.printPlayerBoards(name));
+        System.out.println("\n---FIRING RANGE---");
+        board.printBoards(blankBoard);
     }
 
 }

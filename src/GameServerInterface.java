@@ -14,5 +14,5 @@ public interface GameServerInterface extends Remote {
     void addToCollection(BattleshipBoard board, String name) throws RemoteException;
     String[][] printPlayerBoards(String name) throws RemoteException;
     void deregisterClient(GameClientInterface client) throws RemoteException;
-    void updateOpponentBoard(int X, int Y) throws RemoteException;
+    void updateOpponentBoard(int X, int Y, GameClientInterface client) throws RemoteException;
 }
