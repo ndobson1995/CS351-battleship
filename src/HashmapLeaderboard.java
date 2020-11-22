@@ -8,30 +8,15 @@ import java.util.Map;
  */
 public class HashmapLeaderboard {
 
-    final static String leaderboardFilePath = "leaderboard.txt";
-
-    /**
-     * @return the wins
-     */
-
-
-    //todo take out later on - testing
-    public static void main(String[] args) {
-        read();
-
-        write("sonja",3,4);
-        write("willl",3,4);
-        write("nic",3,4);
-    }
-
+    private final static String leaderboardFilePath = "leaderboard.txt";
 
     /**
      * gets number of wins from a player using the hashmap
      *
-     * @param player
+     * @param player the person playing the game
      * @return integer of total games won
      */
-    public static int getWins(String player){
+    private static int getWins(String player) {
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
         int wins = 0;
         // if there isn't an entry for the player in the leaderboard, return 0.
@@ -45,10 +30,10 @@ public class HashmapLeaderboard {
     /**
      * gets number of losses from a player using the hashmap
      *
-     * @param player
+     * @param player the person playing the game
      * @return integer of total games lost
      */
-    public static int getLosses(String player){
+    private static int getLosses(String player) {
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
         int losses = 0;
         // if there isn't an entry for the player in the leaderboard, return 0.
@@ -63,10 +48,10 @@ public class HashmapLeaderboard {
     /**
      * gets number of total game played per user
      *
-     * @param player
+     * @param player the person playing the game
      * @return total number of games played
      */
-    public static int getPlayedTotal(String player){
+    private static int getPlayedTotal(String player) {
         Map<String, ArrayList<Integer>> leaderboard = readLeaderboard();
         int gamesPlayed = 0;
         // if there isn't an entry for the player in the leaderboard, return 0.
@@ -114,9 +99,6 @@ public class HashmapLeaderboard {
                 if (!name.equals("") && !scores.equals(""))
                     leaderboard.put(name, winsLossesTotals);
 
-
-
-
             }
 
             try {
@@ -146,7 +128,7 @@ public class HashmapLeaderboard {
      * @param win if they won, this is a 1, if not, a 0
      * @param loss if they lost, this is a 1, if not, a 0
      */
-    public synchronized static void write(String player, int win, int loss) {
+    protected synchronized static void write(String player, int win, int loss) {
         HashMap<String, ArrayList<Integer>> scoreSheet = new HashMap<>();
         ArrayList<Integer> gatheredScores = new ArrayList<>();
 
@@ -186,7 +168,7 @@ public class HashmapLeaderboard {
      * Headers added to differentiate between data
      */
     private static void createFile(){
-        FileWriter fw = null;
+        FileWriter fw;
         try {
             fw = new FileWriter("leaderboard.txt",true);
             BufferedWriter buffStuffWriter = new BufferedWriter(fw);
@@ -197,7 +179,7 @@ public class HashmapLeaderboard {
 
     }
 
-    public static Map<String, ArrayList<Integer>> read(){
+    protected static Map<String, ArrayList<Integer>> read() {
         return readLeaderboard();
     }
 
