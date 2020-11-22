@@ -10,6 +10,8 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
     public BattleshipBoard board;
     private String[][] blankBoard;
     private int hits = 0;
+    private boolean lost = false;
+    private boolean won = false;
 
     /**
      * Constructor for game client
@@ -46,7 +48,6 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
                     Thread.sleep(5000);
                 }
                 else if(gameServer.getPlayerBoards() > 2){
-                    gameAvailable = false;
                     break;
                 }
                 else{
@@ -70,6 +71,7 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
 
 
 
+
     private void gameLogic() throws RemoteException {
         System.out.println("\n---YOUR BOARD---");
         board.printBoards(gameServer.printPlayerBoards(name));
@@ -81,8 +83,12 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
                 firedSuccessfully = fire();
             }
             if(hits == 5){
+                won = true;
                 System.out.println("You win!");
-                gameServer.tellThemTheyAreALoser();
+                gameServer.tellThemTheyAreALoser(name);
+                break;
+            }
+            if(lost){
                 break;
             }
 
@@ -122,10 +128,16 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
     }
 
     @Override
-    public BattleshipBoard getBoard() throws RemoteException {
+    public BattleshipBoard getBoard(){
         return board;
     }
 
+
+    @Override
+    public void youLost(){
+        System.out.println("You lost");
+        lost = true;
+    }
 
     @Override
     public void printAfterShot() throws RemoteException {
@@ -136,6 +148,9 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
         board.printBoards(blankBoard);
     }
 
+    public boolean isWon() {
+        return won;
+    }
 }
 
 

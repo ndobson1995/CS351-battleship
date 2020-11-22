@@ -89,6 +89,7 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
         playerBoards.put(name, board);
     }
 
+
     @Override
     public void removeFromCollection(BattleshipBoard board, String name) {
         playerBoards.remove(name, board);
@@ -106,14 +107,21 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
 
     @Override
     public void updateOpponentBoard(int X, int Y, GameClientInterface client) throws RemoteException {
-        for (int i = 0; i < clients.size(); i++) {
-            clients.get(i).printAfterShot();
+        for (GameClientInterface gameClientInterface : clients) {
+            gameClientInterface.printAfterShot();
         }
     }
 
 
     @Override
-    public void tellThemTheyAreALoser() throws RemoteException {
-
+    public void tellThemTheyAreALoser(String name){
+        clients.forEach((cli) -> {
+            try {
+                if(!cli.isWon())
+                cli.youLost();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
