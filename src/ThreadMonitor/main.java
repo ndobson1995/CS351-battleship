@@ -1,24 +1,33 @@
+/**
+ * CS351 Programming Assessment - Thread Monitoring System
+ * Brief - This is the class that handles the main menu for the thread monitoring systems.
+ * Authors : Group 4
+ */
 package ThreadMonitor;
-
 import java.util.Scanner;
 
 class Main implements Runnable {
-
-
     @Override
     public void run() {
-        while(true) {
+        int counter = 0;
+        while(counter < 5) {
             ThreadMonitor.getRootThreadGroup();
             try {
-                Thread.sleep(1000);
+                counter++;
+                Thread.sleep(60000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        System.out.println("Returning to main menu");
     }
 
 
-    public static void main(String[] args) throws InterruptedException {
+    /**
+     * The methon run the main menu for interacting with the threads.
+     * @param args
+     */
+    public static void main(String[] args) {
         Main main = new Main();
 
         Scanner scan = new Scanner(System.in);
