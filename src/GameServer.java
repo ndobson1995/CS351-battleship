@@ -3,7 +3,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * This is the server, it really is only used for multiplayer instances.
  */
@@ -121,6 +120,11 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
                 cli.youLost();
             } catch (RemoteException e) {
                 e.printStackTrace();
+            }
+        });
+        playerBoards.forEach((k, v) -> {
+            if (!k.equals(name)) {
+                Captain.updatePlayer(name, k);
             }
         });
     }

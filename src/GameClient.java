@@ -135,7 +135,7 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
 
     @Override
     public void youLost(){
-        System.out.println("You lost");
+        System.out.println("You lost. Have a pity shot on us.");
         lost = true;
     }
 

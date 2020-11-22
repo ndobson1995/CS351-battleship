@@ -150,7 +150,6 @@ public class Captain extends UnicastRemoteObject implements Runnable {
      * @param loser  player who lost - file updated with games attempted
      */
     public static void updatePlayer(String winner, String loser) {
-
         HashmapLeaderboard.write(winner, 1, 0);
         HashmapLeaderboard.write(loser, 0, 1);
     }
@@ -197,7 +196,7 @@ public class Captain extends UnicastRemoteObject implements Runnable {
                 this.wait(1000);
             }
         }
-        //thread.interrupt();
+        setPlayerFlagToFalse(name);
     }
 }
 
