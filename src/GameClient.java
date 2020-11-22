@@ -21,10 +21,9 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
     protected GameClient(String name, GameServerInterface gameServer, int BG_LENGTH) throws RemoteException {
         this.name = name;
         this.gameServer = gameServer;
-        board = new BattleshipBoard(BG_LENGTH);
         gameServer.registerClient(this);
+        board = new BattleshipBoard(BG_LENGTH);
         blankBoard = new BattleshipBoard(Captain.getBG_LENGTH()).getOpponentBoard();
-
     }
 
 
@@ -41,39 +40,49 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
 
         try {
             System.out.println("Waiting for a game");
+            boolean gameAvailable = false;
             while(true) {
                 if(gameServer.getPlayerBoards() < 2){
                     Thread.sleep(5000);
                 }
+                else if(gameServer.getPlayerBoards() > 2){
+                    gameAvailable = false;
+                    break;
+                }
                 else{
+                    gameAvailable = true;
                     break;
                 }
             }
+            if(gameAvailable) {
+                gameLogic();
+            }
+            else{
+                System.out.println("No game available");
+                gameServer.removeFromCollection(board, name);
+            }
+            gameServer.deregisterClient(this);
         } catch (RemoteException | InterruptedException e) {
             e.printStackTrace();
         }
-        try {
-            gameLogic();
-            gameServer.deregisterClient(this);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        Thread.currentThread().interrupt();
     }
 
 
 
     private void gameLogic() throws RemoteException {
+        System.out.println("\n---YOUR BOARD---");
+        board.printBoards(gameServer.printPlayerBoards(name));
+        System.out.println("\n---FIRING RANGE---");
+        board.printBoards(blankBoard);
         while (true) {
-            System.out.println("\n---YOUR BOARD---");
-            board.printBoards(gameServer.printPlayerBoards(name));
-            System.out.println("\n---FIRING RANGE---");
-            board.printBoards(blankBoard);
             boolean firedSuccessfully = false;
             while(!firedSuccessfully) {
                 firedSuccessfully = fire();
             }
             if(hits == 5){
                 System.out.println("You win!");
+                gameServer.tellThemTheyAreALoser();
                 break;
             }
 
@@ -84,17 +93,17 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
         ArrayList<Integer> coords = board.multiplayerFire();
         try {
             if (blankBoard[coords.get(1)][coords.get(0)].equals("X") ||
-                    blankBoard[coords.get(1)][coords.get(0)].equals("o")
+                    blankBoard[coords.get(1)][coords.get(0)].equals("*")
             ) {
                 System.out.println("Already fired here, try again");
             } else if (gameServer.sendMoves(coords.get(0), coords.get(1), name)) {
-                gameServer.updateOpponentBoard(coords.get(0), coords.get(1), this);
                 blankBoard[coords.get(1)][coords.get(0)] = "X";
+                gameServer.updateOpponentBoard(coords.get(0), coords.get(1), this);
                 hits++;
                 return true;
             } else {
+                blankBoard[coords.get(1)][coords.get(0)] = "*";
                 gameServer.updateOpponentBoard(coords.get(0), coords.get(1), this);
-                blankBoard[coords.get(1)][coords.get(0)] = "o";
                 return true;
             }
         } catch (RemoteException e) {
@@ -110,9 +119,6 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
     @Override
     public void getMoves(int X, int Y, BattleshipBoard board) throws RemoteException {
         board.printBoards(gameServer.printPlayerBoards(name));
-//        if(getBoard() != board) {
-//            System.out.println(board.multiplayerHitOrMiss(opponentBoard.getBoard(), X, Y));
-//        }
     }
 
     @Override
@@ -123,7 +129,7 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
 
     @Override
     public void printAfterShot() throws RemoteException {
-        System.out.println("\n==============================\n");
+        System.out.println("\n==============================");
         System.out.println("\n---YOUR BOARD---");
         board.printBoards(gameServer.printPlayerBoards(name));
         System.out.println("\n---FIRING RANGE---");

@@ -190,12 +190,14 @@ public class Captain extends UnicastRemoteObject implements Runnable {
 
         thread.start();
 
+
         // pause the thread that called this method so it doesn't interfere with the multiplayer game!
         synchronized (this) {
             while (thread.isAlive()) {
-                this.wait();
+                this.wait(1000);
             }
         }
+        //thread.interrupt();
     }
 }
 
