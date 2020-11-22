@@ -67,13 +67,15 @@ class ThreadMonitor {
         int num_threads = main.activeCount();
         Thread[] threads = new Thread[num_threads];
         main.enumerate(threads);
-
-        for (Thread listThread: threads){
-            if (listThread.getName().contains(option)) {
-                listThread.interrupt();
-                listThread.wait(7000);
-                System.out.println("Thread: " + listThread.getName() + "Has Terminated");
+        try {
+            for (Thread listThread : threads) {
+                if (listThread.getName().contains(option)) {
+                    listThread.interrupt();
+                    System.out.println("Thread: " + listThread.getName() + " has Terminated");
+                }
             }
+        }catch (IllegalMonitorStateException e){
+            e.printStackTrace();
         }
     }
 }
