@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class Captain extends UnicastRemoteObject implements Runnable {
 
     private static final long serialVersionUID = 1L;
-    private static final int BG_LENGTH = 5;
+    private static final int BG_LENGTH = 7;
     private Scanner scanner;
     private static LoginPortal portal;
 
@@ -170,7 +170,7 @@ public class Captain extends UnicastRemoteObject implements Runnable {
      * Displays leaderboard - shows player, wins, losses and games played
      */
     private static void viewLeaderboard() {
-        System.out.println(HashmapLeaderboard.read());
+        HashmapLeaderboard.print();
         System.out.println();
     }
 
@@ -187,7 +187,7 @@ public class Captain extends UnicastRemoteObject implements Runnable {
         portal.loginCLI(name);
 
         Thread thread = new Thread(new Thread(new GameClient(name,
-                (GameServerInterface) Naming.lookup("//localhost:33333/Battleship"))));
+                (GameServerInterface) Naming.lookup("//localhost:33333/Battleship"), BG_LENGTH)));
 
         thread.start();
 

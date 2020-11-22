@@ -115,13 +115,7 @@ public class HashmapLeaderboard {
                     leaderboard.put(name, winsLossesTotals);
 
 
-                for (Map.Entry<String, ArrayList<Integer>> entry : leaderboard.entrySet()) {
-                    System.out.print(entry.getKey()+" | ");
-                    for(int user : entry.getValue()){
-                        System.out.print("\t"+ user+"  \t");
-                    }
-                    System.out.println();
-                }
+
 
             }
 
@@ -205,5 +199,16 @@ public class HashmapLeaderboard {
 
     public static Map<String, ArrayList<Integer>> read(){
         return readLeaderboard();
+    }
+
+    public static void print(){
+        Map<String, ArrayList<Integer>> leaderboard = read();
+        for (Map.Entry<String, ArrayList<Integer>> entry : leaderboard.entrySet()) {
+            System.out.print(entry.getKey()+" | ");
+            for(int user : entry.getValue()){
+                System.out.print("\t"+ user+"  \t");
+            }
+            System.out.println();
+        }
     }
 }

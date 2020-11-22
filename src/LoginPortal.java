@@ -157,7 +157,7 @@ public class LoginPortal extends JFrame implements ActionListener{
      * @param playername - name user has entered
      * @param activePlayer - true or false value if player is currenly logged on or not
      */
-    public void saveDetailsToFile(String playername,boolean activePlayer) {
+    public synchronized void saveDetailsToFile(String playername,boolean activePlayer) {
         loginMap.put(playername, activePlayer);
         try {
             FileWriter fw = new FileWriter("login-data.txt", true);

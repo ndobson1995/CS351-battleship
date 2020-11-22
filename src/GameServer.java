@@ -32,10 +32,10 @@ public class GameServer extends UnicastRemoteObject implements GameServerInterfa
      * @param Y Y coordinate
      */
     @Override
-    public synchronized void sendMoves(int X, int Y) throws RemoteException {
+    public synchronized void sendMoves(int X, int Y, BattleshipBoard board) throws RemoteException {
         int i = 0;
         while(i < clients.size()){
-            clients.get(i++).getMoves(X, Y);
+            clients.get(i++).getMoves(X, Y, board);
         }
     }
 

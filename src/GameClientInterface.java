@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
  * Interface for the clients.
  */
 public interface GameClientInterface extends Remote {
-    void getMoves(int X, int Y) throws RemoteException;
+    void getMoves(int X, int Y, BattleshipBoard board) throws RemoteException;
     BattleshipBoard getBoard() throws RemoteException;
 }
 

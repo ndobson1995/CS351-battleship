@@ -7,7 +7,6 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
     private static final long serialVersionUID = 1L;
     private final GameServerInterface gameServer;
     private final String name;
-    private static final int BG_LENGTH = 3;
     public BattleshipBoard board;
     public BattleshipBoard opponentBoard;
 
@@ -19,7 +18,7 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
      * @param gameServer reference to the running server
      * @throws RemoteException in case of connection issues
      */
-    protected GameClient(String name, GameServerInterface gameServer) throws RemoteException {
+    protected GameClient(String name, GameServerInterface gameServer, int BG_LENGTH) throws RemoteException {
         this.name = name;
         this.gameServer = gameServer;
         board = new BattleshipBoard(BG_LENGTH);
@@ -46,30 +45,25 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
                 if(gameServer.getPlayerBoards().size() == 1){
                     Thread.sleep(2000);
                 }else {
-                    //if (gameServer.getPlayerBoards().size() > 1) {
+                    if (gameServer.getPlayerBoards().size() > 1) {
                         for (int i = 0; i < gameServer.getPlayerBoards().size(); i++) {
-                            if(board.getBoard() == gameServer.getPlayerBoards().get(i).getBoard()){
-
-                            }
-                            else{
+                            if(board.getBoard() != gameServer.getPlayerBoards().get(i).getBoard()){
                                 opponentBoard.setBoard(gameServer.getPlayerBoards().get(i).getBoard());
-                                //board.setBoard(gameServer.getPlayerBoards().get(i + 1).getBoard());
                                 break outerloop;
                             }
                         }
-                   // }
+                   }
                 }
             }
         } catch (RemoteException | InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("true");
 
         while (true) {
             board.printBoard();
             ArrayList<Integer> coords = board.multiplayerFire();
             try {
-                gameServer.sendMoves(coords.get(0), coords.get(1));
+                gameServer.sendMoves(coords.get(0), coords.get(1), board);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -82,9 +76,10 @@ public class GameClient extends UnicastRemoteObject implements GameClientInterfa
      * @param Y Y coordinate
      */
     @Override
-    public void getMoves(int X, int Y) {
-        System.out.println(X + " " + Y);
-        System.out.println(board.multiplayerHitOrMiss(opponentBoard.getBoard(), X, Y));
+    public void getMoves(int X, int Y, BattleshipBoard board) throws RemoteException {
+        if(getBoard() != board) {
+            System.out.println(board.multiplayerHitOrMiss(opponentBoard.getBoard(), X, Y));
+        }
     }
 
     @Override
